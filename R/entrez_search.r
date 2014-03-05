@@ -1,9 +1,8 @@
 #' Search the NCBI databases using EUtils
 #'
-#' Contstructs a url  with the given arguments, are downloads xml record
-#' returned by that url. See the package-level documentation for general advice
-#' on using the EUtils functions. 
-#'
+#' Contstructs a query with the given arguments, including a search term, and
+#' a darabase name, then retrieves the XML document created by that query. 
+#' See package-level documentation for general advice on using the Entrez functions 
 #'
 #'@export
 #'@param db character Name of the database to search for
@@ -19,20 +18,18 @@
 #'\code{\link{xmlTreeParse}}
 #' @examples
 #' \dontrun{
-#'  ratites <- entrez_search(db="popset", term="ratite", usehistory=TRUE)
-#'   entrez_fetch(db="popset", ids="", file_format="fasta", WebEnv=ratites$WebEnv, query_key=ratites$QueryKey)
+#'    query <- "Gastropoda[Organism] AND COI[Gene]"
+#'    web_env_search <- entrez_search(db="nuccore", query, usehistory="y")
+#'    cookie <- web_env_search$WebEnv
+#'    qk <- web_env_search$QueryKey 
+#'    snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
+#'                              file_format = "fasta", retmax = 10)
 #'}
-#'
-#' 
-
 
 entrez_search <- function(db, term, ... ){
-    args <- c(db=db, term=gsub(" ", "+", term), email=entrez_email, 
-              tool=entrez_tool, ...)
-    url_args <- paste(paste(names(args), args, sep="="), collapse="&")
-    base_url <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?"
-    search <- paste(base_url, url_args, sep="&")
-    xml_result <- xmlParse(getURL(search))
+    url_string <- make_entrez_query("esearch", db=db, 
+                                    term=gsub(" ", "+", term), ...)
+    xml_result <- xmlParse(getURL(url_string))
     ids <- xpathSApply(xml_result, "//IdList/Id", xmlValue)
     count <- xpathSApply(xml_result, "/eSearchResult/Count", xmlValue)
     retmax <- xpathSApply(xml_result, "/eSearchResult/RetMax", xmlValue)
@@ -41,10 +38,19 @@ entrez_search <- function(db, term, ... ){
 
     #NCBI limits requests to three per second
     Sys.sleep(0.33)
-    return(list(file=xml_result, ids=as.integer(ids), 
-                count=as.integer(count), 
-                retmax=as.integer(retmax),
-                QueryKey= as.integer(QueryKey),
-                WebEnv = WebEnv
+    res <- (list(file=xml_result, ids=ids, 
+                 count=as.integer(count), 
+                 retmax=as.integer(retmax),
+                 QueryKey= as.integer(QueryKey),
+                 WebEnv = WebEnv
             ))
+    class(res) <- c("esearch", class(res))
+    return(res)
 }
+
+#' @S3method print esearch
+
+print.esearch <- function(x, ...){
+    cat(paste("Entrez search result with", x$count, "IDs (max =", x$retmax, ")\n"))
+}
+
