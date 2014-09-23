@@ -3,14 +3,16 @@
 \alias{entrez_summary}
 \title{Get summaries of objects in NCBI datasets from a unique ID}
 \usage{
-entrez_summary(db, ...)
+entrez_summary(db, config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for}
 
 \item{\dots}{character Additional terms to add to the request. Requires either
-ID (unique id(s) for records in a given database) or WebEnv (a character
+id (unique id(s) for records in a given database) or WebEnv (a character
 containing a cookie created by a previous entrez query).}
+
+\item{config}{vector configuration options passed to httr::GET}
 }
 \value{
 A list of esummary records (if multiple IDs are passed) or a single
@@ -28,5 +30,16 @@ created by that query. The XML document is parsed, with the
 pop_ids = c("307082412", "307075396", "307075338", "307075274")
  pop_summ <- entrez_summary(db="popset", id=pop_ids)
  sapply(pop_summ, "[[", "Title")
+
+ # clinvar example
+ res <- entrez_search(db = "clinvar", term = "BRCA1")
+ cv <- entrez_summary(db="clinvar", id=res$ids)
+ cv[[1]] # get the names of the list for each result
+ sapply(cv, "[[", "title") # titles
+ lapply(cv, "[[", "trait_set")[1:2] # trait_set
+ sapply(cv, "[[", "gene_sort") # gene_sort
+}
+\seealso{
+\code{\link[httr]{config}} for avaliable configs
 }
 
