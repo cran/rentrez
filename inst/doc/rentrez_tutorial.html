@@ -306,8 +306,6 @@ data_summaries[[1]]
 
 <pre><code class="r">coi &lt;- entrez_fetch(db = &quot;popset&quot;, rettype = &#39;fasta&#39;, id = NCBI_data$pubmed_popset[1])
 rag1 &lt;- entrez_fetch(db = &quot;popset&quot;, rettype = &#39;fasta&#39;, id = NCBI_data$pubmed_popset[3])
-write(coi, &quot;~/moray_coi_raw.fasta&quot;)
-write(rag1, &quot;~/moray_rag1_raw.fasta&quot;)
 </code></pre>
 
 <p>So I&#39;ve got the data on hand - that&#39;s all the I need <code>rentrez</code> for, but I might as well align these sequences and make gene trees for each. I&#39;ll just do a quick and diry neighbor-joining tree using <code>ape</code> and we can clean up the long OTU names with the help of <code>stingr</code>. (I put the fussy work of cleaning the names and rooting the trees into a function <code>clean_and_root</code>):</p>
@@ -319,6 +317,9 @@ as part of the vignette</em></p>
 <pre><code class="r">library(ape)
 library(stringr)
 clean_and_root &lt;- function(tr, outgroup, resolved = TRUE) {
+write(coi, &quot;~/moray_coi_raw.fasta&quot;)
+write(rag1, &quot;~/moray_rag1_raw.fasta&quot;)
+
     tr$tip.label &lt;- sapply(str_split(tr$tip.label, &quot; &quot;), function(x) paste(x[2:3],
         collapse = &quot;_&quot;))
     return(root(tr, outgroup, resolve.root = resolved))

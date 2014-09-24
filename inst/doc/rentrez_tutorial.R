@@ -35,14 +35,15 @@ sapply(data_summaries, "[[", "Title")
 ## ----entrez_fetch, message=FALSE, warning=FALSE, comment=NA, cache=FALSE----
 coi <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_popset[1])
 rag1 <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_popset[3])
-write(coi, "~/moray_coi_raw.fasta")
-write(rag1, "~/moray_rag1_raw.fasta")
 
 
 ## ----muscle, eval=FALSE--------------------------------------------------
 ## library(ape)
 ## library(stringr)
 ## clean_and_root <- function(tr, outgroup, resolved = TRUE) {
+## write(coi, "~/moray_coi_raw.fasta")
+## write(rag1, "~/moray_rag1_raw.fasta")
+## 
 ##     tr$tip.label <- sapply(str_split(tr$tip.label, " "), function(x) paste(x[2:3],
 ##         collapse = "_"))
 ##     return(root(tr, outgroup, resolve.root = resolved))
