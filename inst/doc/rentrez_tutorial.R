@@ -23,13 +23,17 @@ pubmed_search$ids
 
 ## ----entrez_link, message=FALSE, warning=FALSE, comment=NA, cache=FALSE----
 NCBI_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db = "all")
-str(NCBI_data)
+NCBI_data
+
+
+## ----summ----------------------------------------------------------------
+entrez_db_summary("popset")
 
 
 ## ----entrez_summary, message=FALSE, warning=FALSE, comment=NA, cache=FALSE----
 data_summaries <- entrez_summary(db = "popset", id = NCBI_data$pubmed_popset)
 data_summaries[[1]]
-sapply(data_summaries, "[[", "Title")
+sapply(data_summaries, "[[", "title")
 
 
 ## ----entrez_fetch, message=FALSE, warning=FALSE, comment=NA, cache=FALSE----
@@ -41,13 +45,14 @@ rag1 <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_pop
 ## library(ape)
 ## library(stringr)
 ## clean_and_root <- function(tr, outgroup, resolved = TRUE) {
-## write(coi, "~/moray_coi_raw.fasta")
-## write(rag1, "~/moray_rag1_raw.fasta")
 ## 
 ##     tr$tip.label <- sapply(str_split(tr$tip.label, " "), function(x) paste(x[2:3],
 ##         collapse = "_"))
 ##     return(root(tr, outgroup, resolve.root = resolved))
 ## }
+## write(coi, "~/moray_coi_raw.fasta")
+## write(rag1, "~/moray_rag1_raw.fasta")
+## 
 ## par(mfrow = c(1, 2))
 ## 
 ## coi_ali <- muscle(read.dna("~/moray_coi_raw.fasta", "fasta"))
@@ -61,8 +66,14 @@ rag1 <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_pop
 ## plot(clean_rag_tr, direction = "leftward", cex = 1)
 
 
+## ----fields--------------------------------------------------------------
+search_fields <- entrez_db_searchable("nuccore")
+search_fields
+search_fields$ORGN
+
+
 ## ----webenvs1, message=FALSE, warning=FALSE, comment=NA, cache=FALSE-----
-snail_search <- entrez_search(db = "nuccore", "Gastropoda[Organism] AND COI[Gene]", usehistory = "y")
+snail_search <- entrez_search(db = "nuccore", "Gastropoda[ORGN] AND COI[Gene]", usehistory = "y")
 
 
 ## ----webenvs2, message=FALSE, warning=FALSE, comment=NA, cache=FALSE-----

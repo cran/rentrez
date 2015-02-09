@@ -1,6 +1,6 @@
 #Create a URL for the EUtils API. 
 #
-# This function is usde by all the API-querying functions in rentrez to build
+# This function is used by all the API-querying functions in rentrez to build
 # the appropriate url. Required arguments for each rentrez are handled in each
 # function. Those arguments that either ID(s) or are WebEnv cookie can be set
 # by passing a string or two argument names to `make_entrez_query`
@@ -12,11 +12,16 @@
 #
 
 
+
+entrez_email <- function() 'david.winter@gmail.com'
+entrez_tool <- function() 'rentrez'
+
 make_entrez_query <- function(util, 
                               require_one_of=NULL,
                               config,
+                              interface=".fcgi?",
                               ...){
-    args <- list(..., emails=entrez_email, tool=entrez_tool)
+    args <- list(..., email=entrez_email(), tool=entrez_tool())
     arg_names <- names(args)
     if(length(require_one_of) > 1 ){
         if(!sum(require_one_of %in% arg_names)==1){
@@ -25,15 +30,25 @@ make_entrez_query <- function(util,
             stop(msg)
         }
     }
-    
-   if("id" %in% arg_names){
+    if("id" %in% arg_names){
         args$id <- paste(args$id, collapse=",")      
     }
-    uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, ".fcgi?")
+    uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
     response <- httr::GET(uri, query=args, config= config)
     httr::stop_for_status(response)
     return(httr::content(response, as="text"))
-
 }
 
-  
+parse_respone <- function(x, type){
+    res <- switch(type, 
+            "json" = jsonlite::fromJSON(x),
+            "xml"  = xmlTreeParse(x, useInternalNodes=TRUE)
+    )
+    return(res)
+}
+
+
+.last <- function(s){
+    len <- nchar(s)
+    substr(s, len-1, len)
+}
