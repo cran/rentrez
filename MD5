@@ -1,9 +1,9 @@
-ac78a25d4720e9c66c9bddff5a987d41 *DESCRIPTION
+69cee72123deb11023373499f6794d0e *DESCRIPTION
 5036ece67de3d36ce0e7ab1dc183a88a *LICENSE
 22696a7d21c1794ee7472b6ad93e13e9 *NAMESPACE
-83ecc52fecca1abd592b21f39bbe772c *NEWS
+6fc7cc784a40f54ae7c0bc85dc3d16cc *NEWS
 1994e6dce474a442c75a56123394b89f *R/base.r
-f41b477dec9a57c9a3ff8b0f15cd3ec8 *R/entrez_citmatch.r
+ceded89b5f283858058f15aa0b00e2e2 *R/entrez_citmatch.r
 8c7aa3e35e1b31ae26bf9c3144b0c265 *R/entrez_fetch.r
 e46e02b9509527dae2f1c74641ea5d48 *R/entrez_global_query.r
 3b9414b164f4ac14fa245f150ebc8ca1 *R/entrez_info.r
@@ -16,8 +16,8 @@ faa71b619580d01d20b42b061fa9ecf0 *R/parse_pubmed_xml.r
 7e40733d410404b1c38a21db9a27373c *build/vignette.rds
 69eb2d6adc6adf29d5e393721c468944 *inst/doc/rentrez_tutorial.R
 05bdfc56ff2f27c5d2df14b7785566d2 *inst/doc/rentrez_tutorial.Rmd
-f7cdd8bacb06f04d8efd041f4aee3479 *inst/doc/rentrez_tutorial.html
-01f3fd0bf64ebb46414b4edccf603b25 *man/entrez_citmatch.Rd
+a6db43ddb0a31245f7f6bf68ff2ea752 *inst/doc/rentrez_tutorial.html
+654a2f5fa869a8573e256a97465391cc *man/entrez_citmatch.Rd
 8b3851e134d6c34ded2e2cd9058304ad *man/entrez_db_links.Rd
 9f340e934f6cd8223beb0b99d057b3c8 *man/entrez_db_searchable.Rd
 ccde185d736e5a9081994a3d2c0f7b04 *man/entrez_db_summary.Rd
