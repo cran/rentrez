@@ -288,7 +288,7 @@ a little bit more about this datbase with <code>entrez_db_summary()</code></p>
 <pre><code>##                   DbName                 MenuName              Description 
 ##                 &quot;popset&quot;                 &quot;PopSet&quot; &quot;PopSet sequence record&quot; 
 ##                  DbBuild                    Count               LastUpdate 
-##    &quot;Build150303-0427m.1&quot;                 &quot;219990&quot;       &quot;2015/03/03 07:00&quot;
+##    &quot;Build150625-0902m.1&quot;                 &quot;227554&quot;       &quot;2015/06/25 11:42&quot;
 </code></pre>
 
 <p>If I want to see
@@ -303,10 +303,10 @@ kind of information they contain then extract the Title from each record:</p>
 data_summaries[[1]]
 </code></pre>
 
-<pre><code>esummary result with 16 items:
+<pre><code>esummary result with 17 items:
  [1] uid        caption    title      extra      gi         settype   
  [7] createdate updatedate flags      taxid      authors    article   
-[13] journal    statistics properties oslt      
+[13] journal    strain     statistics properties oslt      
 </code></pre>
 
 <pre><code class="r">sapply(data_summaries, &quot;[[&quot;, &quot;title&quot;)
@@ -397,7 +397,7 @@ search_fields
 ## [1] &quot;Scientific and common names of organism, and all higher levels of taxonomy&quot;
 ## 
 ## $TermCount
-## [1] &quot;2932579&quot;
+## [1] &quot;3025070&quot;
 ## 
 ## $IsDate
 ## [1] &quot;N&quot;
