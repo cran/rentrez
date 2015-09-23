@@ -1,7 +1,5 @@
 #' Get summaries of objects in NCBI datasets from a unique ID 
 #
-#' Constructs a query from the given arguments, including a database name and
-#' list of of unique IDs for that database.
 #' 
 #' The NCBI offer two distinct formats for summary documents.
 #' Version 1.0 is a relatively limited summary of a database record based on a 
@@ -16,75 +14,123 @@
 #' naming of the "Version 1.0" summary files can be updated by setting the new
 #' \code{version} argument to "1.0".
 #'
+#' By default, entrez_summary returns a single record when only one ID is
+#' passed and a list of such records when multiple IDs are passed. This can lead
+#' to unexpected behaviour when the results of a variable number of IDs (perhaps the
+#' result of \code{entrez_search}) are processed with an apply family function
+#' or in a for-loop. If you use this function as part of a function or script that
+#' generates a variably-sized vector of IDs setting \code{always_return_list} to 
+#' \code{TRUE} will avoid these problems. The function
+#' \code{extract_from_esummary} is  provided for the specific case of extracting
+#' named elements from a list of esummary objects, and is designed to work on
+#' single objects as well as lists.
+#'
 #'@export
 #'@param db character Name of the database to search for
-#'@param \dots character Additional terms to add to the request. Requires either
-#'   id (unique id(s) for records in a given database) or WebEnv (a character
-#'   containing a cookie created by a previous entrez query).
+#'@param id vector with unique ID(s) for records in database \code{db}. 
+#'@param web_history A web_history object 
+#'@param always_return_list logical, return a list  of esummary objects even
+#'when only one ID is provided (see description for a note about this option)
+#'@param \dots character Additional terms to add to the request, see NCBI
+#'documentation linked to in references for a complete list
 #'@param config vector configuration options passed to \code{httr::GET}
 #'@param version either 1.0 or 2.0 see above for description
+#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESummary_} 
 #'@seealso \code{\link[httr]{config}} for available configs 
-#'@return A list of esummary records (if multiple IDs are passed) or a single
-#' record.
-#'@return file XMLInternalDocument xml file resulting from search, parsed with
-#'\code{\link{xmlTreeParse}}
-#'@import XML
+#'@seealso \code{\link{extract_from_esummary}} which can be used to extract
+#'elements from a list of esummary records
+#'@return A list of esummary records (if multiple IDs are passed and
+#'always_return_list if FALSE) or a single record.
+#'@return file XMLInternalDocument xml file containing the entire record
+#'returned by the NCBI.
+#'@importFrom XML xpathApply xmlSApply xmlGetAttr xmlValue
+#'@importFrom jsonlite fromJSON
 #' @examples
-#'
+#'\donttest{
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
 #'  pop_summ <- entrez_summary(db="popset", id=pop_ids)
-#'  sapply(pop_summ, "[[", "title")
+#'  extract_from_esummary(pop_summ, "title")
 #'  
 #'  # clinvar example
 #'  res <- entrez_search(db = "clinvar", term = "BRCA1", retmax=10)
 #'  cv <- entrez_summary(db="clinvar", id=res$ids)
-#'  cv[[1]] # get the names of the list for each result
-#'  sapply(cv, "[[", "title") # titles
-#'  lapply(cv, "[[", "trait_set")[1:2] # trait_set
-#'  sapply(cv, "[[", "gene_sort") # gene_sort
-
-entrez_summary <- function(db, version=c("2.0", "1.0"), config=NULL, ...){
+#'  cv
+#'  extract_from_esummary(cv, "title", simplify=FALSE)
+#'  extract_from_esummary(cv, "trait_set")[1:2] 
+#'  extract_from_esummary(cv, "gene_sort") 
+#' }
+entrez_summary <- function(db, id=NULL, web_history=NULL, 
+                           version=c("2.0", "1.0"), always_return_list = FALSE, config=NULL, ...){
+    identifiers <- id_or_webenv()
     v <-match.arg(version)
-    if(v == "2.0"){
-        retmode <- "json"
-    }else retmode <- "xml"
-    response  <- make_entrez_query("esummary", db=db, config=config,
-                                   retmode=retmode, version=v,
-                                   require_one_of=c("id", "WebEnv"), ...)
-    whole_record <- parse_respone(response, retmode)
-    parse_esummary(whole_record)
+    retmode <- if(v == "2.0") "json" else "xml"
+    args <- c(list("esummary", db=db, config=config, retmode=retmode, version=v, ...), identifiers)
+    response  <- do.call(make_entrez_query, args)
+    whole_record <- parse_response(response, retmode)
+    parse_esummary(whole_record, always_return_list)
+}
+
+#' Extract elements from a list of esummary records
+#'@export
+#'@param esummaries A list of esummary objects
+#'@param elements the names of the element to extract
+#'@param simplify logical, if possible return a vector
+#'@return List or vector containing requested elements 
+extract_from_esummary <- function(esummaries, elements, simplify=TRUE){
+    UseMethod("extract_from_esummary", esummaries)
+}
+
+#'@export
+extract_from_esummary.esummary <- function(esummaries, elements, simplify=TRUE){
+    fxn <- if(simplify & length(elements)==1) `[[` else `[`
+    fxn(esummaries, elements)
+}
+
+#'@export
+extract_from_esummary.esummary_list <- function(esummaries, elements, simplify=TRUE){
+    fxn <- if (simplify & length(elements) == 1) `[[` else `[`
+    sapply(esummaries, fxn, elements, simplify=simplify)
 }
 
 
-parse_esummary <- function(x) UseMethod("parse_esummary")
 
-reclass <- function(x){
-    class(x) <- c("esummary", "list")
-    x
+
+parse_esummary <- function(x, always_return_list) UseMethod("parse_esummary")
+
+
+check_json_errs <- function(rec){
+    if("error" %in% names(rec)){
+        msg <- paste0("ID ", rec$uid, " produced error '", rec$error, "'")
+        warning(msg, call.=FALSE)
+    }
+    invisible()
 }
 
 
-parse_esummary.list <- function(x){
-    #already parsed by jsonlite, just add class info to each one
+parse_esummary.list <- function(x, always_return_list){
+    #already parsed by jsonlite, just add check for errors, then re-class
     res <- x$result[2: length(x$result)]
-    res <- lapply(res, reclass)
-    if(length(res)==1){
+    sapply(res, check_json_errs)
+    res <- lapply(res, add_class, new_class="esummary")
+    if(length(res)==1 & !always_return_list){
         return(res[[1]])
     }
-    return(res)
+    class(res) <- c("esummary_list", "list")
+    res
 }
 
-# Prase a sumamry XML 
+# Prase a summary XML 
 #
 # Logic goes like this
 # 1. Define functions parse_esumm_* to handle all data types
 # 2. For each node detect type, parse accordingly
-# 3. wrap it all up in function parse_esummary that 
+# 3. wrap it all up in function parse_summary that 
 #
 
 #
 #@export
-parse_esummary.XMLInternalDocument  <- function(x){
+parse_esummary.XMLInternalDocument  <- function(x, always_return_list){
+    check_xml_errors(x)
     recs <- x["//DocSum"]
     if(length(recs)==0){
        stop("Esummary document contains no DocSums, try 'version=2.0'?)")
@@ -95,19 +141,19 @@ parse_esummary.XMLInternalDocument  <- function(x){
         res <- c(res, file=x)
         class(res) <- c("esummary", class(res))
         return(res)
-    }
-    if(length(recs) == 1){
-        res <- per_rec(recs[[1]])
-    } else{
-        res <- lapply(recs, per_rec)
-        names(res) <-  xpathSApply(x, "//DocSum/Id", xmlValue)
-    }
-    return(res)
-
+    } 
+    if(length(recs)==1 & !always_return_list){
+        return(per_rec(recs[[1]]))
+    } 
+    res <- lapply(recs, per_rec)
+    names(res) <-  xpathSApply(x, "//DocSum/Id", xmlValue)
+    class(res) <- c("esummary_list", "list")
+    res
 }
 
 parse_node <- function(node) {
     node_type <- xmlGetAttr(node, "Type")
+
     node_fxn <- switch(node_type, 
                        "Integer" = parse_esumm_int,
                        "List" = parse_esumm_list,
@@ -126,77 +172,6 @@ parse_esumm_list <- function(node){
 }
 
 
-#parse_esummary_clinvar <- function(record){
-#  easynodes <- c('obj_type','accession','accession_version','title','supporting_submissions',
-#    'gene_sort','chr_sort','location_sort','variation_set_name')
-#  res <- sapply(easynodes, function(x) xpathApply(record, x, xmlValue))
-#  res$clinical_significance <- xpathApply(record, 'clinical_significance', xmlToList)[[1]]
-#  variation_set <- xpathApply(record, 'variation_set', xmlToList)[[1]]$variation
-#  variation_set$variation$aliases <- unlist(variation_set$variation$aliases, use.names = FALSE)
-#  trait_set <- xpathApply(record, 'trait_set', xmlToList)[[1]]$trait
-#  trait_set$trait$trait_xrefs <- unname(trait_set$trait$trait_xrefs)
-#  res$variation_set <- variation_set
-#  res$trait_set <- trait_set
-#  res <- c(res, file=record)
-#  class(res) <- c("esummary", class(res))
-#  return(res)
-#}
-
-#' @export
-`[[.esummary` <- function(x, name, ...){
-    res <- NextMethod("[[") 
-    if(is.null(res)){
-        msg <- paste0("Esummary object '", deparse(substitute(x)), "' has no object",
-                     " named '", name, "' \b.\nIf you were expecting values from a ",
-                     " 'versoin 1.0' esummary record, try setting 'version' to ",
-                     " '1.0' in entrez_summary (see documentation for more)\n")
-        warning(msg)
-     }
-    res
-}
-
-
-#' @export
-`[.esummary` <- function(x, ...){
-    res <- NextMethod("[") 
-    if(any(vapply(res, is.null, TRUE))){
-        msg <- paste("Some values missing from Esumamry object. If you were",
-                     "expecting a 'Version 1.0' esummary record, try setting",
-                     "'version' to '1.0' in entrez_summary()")
-       warning(msg) 
-     }
-    res
-}
-
-
-
-#' @export
-`$.esummary` <- function(x, name){
-    suppressWarnings(
-        res <- x[[name]]
-    )
-    if(!is.null(res)){
-        return(res)
-    }
-    suppressWarnings(res <- x[[name, exact=FALSE]])
-    if(!is.null(res) &&  getOption("warnPartialMatchDollar", default=FALSE)){
-        warning("Returning partial match")
-        return(res)
-    }
-    if(is.null(res)){
-         msg <- paste0("Esummary object '", deparse(substitute(x)), "' has no object",
-                     " named '", name, "' \b.\nIf you were expecting values from a ",
-                     " 'versoin 1.0' esummary record, try setting 'version' to ",
-                     " '1.0' in entrez_summary (see documentation for more)\n")
-        warning(msg)
-    }
-    res
-}
-
-
-
-
-
 #' @export 
 print.esummary <- function(x, ...){
     len <- length(x)
@@ -204,6 +179,10 @@ print.esummary <- function(x, ...){
     print(names(x)[-len], quote=FALSE)
 }
 
-
-
-
+#' @export
+print.esummary_list <- function(x, ...){
+    len <- length(x)
+    cat("List of ", len, "esummary records. First record:\n\n ")
+    print(x[1])
+}
+    

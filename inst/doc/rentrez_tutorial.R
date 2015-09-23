@@ -1,71 +1,180 @@
-## ---- eval=TRUE, echo=FALSE----------------------------------------------
-library(knitr)
-opts_knit$set(upload.fun = image_uri)
-opts_knit$set(fig.keep = "last")
-opts_knit$set(fig.show = "hold")
+## ---- count_recs, echo=FALSE---------------------------------------------
+library(rentrez)
+count_recs <- function(db, denom) {
+    nrecs <-  rentrez::entrez_db_summary(db)["Count"]
+    round(as.integer(nrecs)/denom, 1)
+}
+
+## ---- dbs----------------------------------------------------------------
+entrez_dbs()
+
+## ---- cdd----------------------------------------------------------------
+entrez_db_summary("cdd")
+
+## ---- sra_eg-------------------------------------------------------------
+entrez_db_searchable("sra")
+
+## ----eg_search-----------------------------------------------------------
+r_search <- entrez_search(db="pubmed", term="R Language")
+
+## ----print_search--------------------------------------------------------
+r_search
+
+## ----search_ids----------------------------------------------------------
+r_search$ids
+
+## ----searchids_2---------------------------------------------------------
+another_r_search <- entrez_search(db="pubmed", term="R Language", retmax=40)
+another_r_search
+
+## ---- Tt-----------------------------------------------------------------
+entrez_search(db="sra",
+              term="Tetrahymena thermophila[ORGN]",
+              retmax=0)
+
+## ---- Tt2----------------------------------------------------------------
+entrez_search(db="sra",
+              term="Tetrahymena thermophila[ORGN] AND 2013:2015[PDAT]",
+              retmax=0)
+
+## ---- Tt3----------------------------------------------------------------
+entrez_search(db="sra",
+              term="(Tetrahymena thermophila[ORGN] OR Tetrahymena borealis[ORGN]) AND 2013:2015[PDAT]",
+              retmax=0)
+
+## ---- sra_searchable-----------------------------------------------------
+entrez_db_searchable("sra")
+
+## ---- mesh---------------------------------------------------------------
+entrez_search(db   = "pubmed",
+              term = "(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])")
+
+## ---- connectome, fig.width=5, fig.height=4, fig.align='center'----------
+search_year <- function(year, term){
+    query <- paste(term, "AND (", year, "[PDAT])")
+    entrez_search(db="pubmed", term=query, retmax=0)$count
+}
+
+year <- 2008:2014
+papers <- sapply(year, search_year, term="Connectome", USE.NAMES=FALSE)
+
+plot(year, papers, type='b', main="The Rise of the Connectome")
+
+## ----elink0--------------------------------------------------------------
+all_the_links <- entrez_link(dbfrom='gene', id=351, db='all')
+all_the_links
+
+## ----elink_link----------------------------------------------------------
+all_the_links$links
+
+## ---- elink_pmc----------------------------------------------------------
+all_the_links$links$gene_pmc[1:10]
+
+## ---- elink_omim---------------------------------------------------------
+all_the_links$links$gene_omim
 
 
-## ----install, eval=FALSE-------------------------------------------------
-#  install.packages("rentrez")
+## ---- elink1-------------------------------------------------------------
+nuc_links <- entrez_link(dbfrom='gene', id=351, db='nuccore')
+nuc_links
+nuc_links$links
 
-## ----load, message=FALSE, warning=FALSE----------------------------------
-library("rentrez")
-library("XML")
+## ---- elinik_refseqs-----------------------------------------------------
+nuc_links$links$gene_nuccore_refseqrna
 
-## ----pubmed_search, message=FALSE, warning=FALSE, comment=NA, cache=FALSE----
-pubmed_search <- entrez_search(db = "pubmed", term = "10.1016/j.ympev.2010.07.013[doi]")
-pubmed_search$ids
+## ---- outlinks-----------------------------------------------------------
+paper_links <- entrez_link(dbfrom="pubmed", id=25500142, cmd="llinks")
+paper_links
 
-## ----entrez_link, message=FALSE, warning=FALSE, comment=NA, cache=FALSE----
-NCBI_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db = "all")
-NCBI_data
+## ---- urls---------------------------------------------------------------
+paper_links$linkouts
 
-## ----summ----------------------------------------------------------------
-entrez_db_summary("popset")
+## ----just_urls-----------------------------------------------------------
+linkout_urls(paper_links)
 
-## ----entrez_summary, message=FALSE, warning=FALSE, comment=NA, cache=FALSE----
-data_summaries <- entrez_summary(db = "popset", id = NCBI_data$pubmed_popset)
-data_summaries[[1]]
-sapply(data_summaries, "[[", "title")
+## ---- multi_default------------------------------------------------------
+all_links_together  <- entrez_link(db="protein", dbfrom="gene", id=c("93100", "223646"))
+all_links_together
+all_links_together$links$gene_protein
 
-## ----entrez_fetch, message=FALSE, warning=FALSE, comment=NA, cache=FALSE----
-coi <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_popset[1])
-rag1 <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_popset[3])
+## ---- multi_byid---------------------------------------------------------
+all_links_sep  <- entrez_link(db="protein", dbfrom="gene", id=c("93100", "223646"), by_id=TRUE)
+all_links_sep
+lapply(all_links_sep, function(x) x$links$gene_protein)
 
-## ----muscle, eval=FALSE--------------------------------------------------
-#  library(ape)
-#  library(stringr)
-#  clean_and_root <- function(tr, outgroup, resolved = TRUE) {
-#  
-#      tr$tip.label <- sapply(str_split(tr$tip.label, " "), function(x) paste(x[2:3],
-#          collapse = "_"))
-#      return(root(tr, outgroup, resolve.root = resolved))
-#  }
-#  write(coi, "~/moray_coi_raw.fasta")
-#  write(rag1, "~/moray_rag1_raw.fasta")
-#  
-#  par(mfrow = c(1, 2))
-#  
-#  coi_ali <- muscle(read.dna("~/moray_coi_raw.fasta", "fasta"))
-#  coi_tr <- nj(dist.dna(coi_ali, "k81"))
-#  clean_coi_tr <- clean_and_root(coi_tr, "Uropterygius_macrocephalus")
-#  plot(clean_coi_tr, direction = "rightwards", cex = 1)
-#  
-#  rag_ali <- muscle(read.dna("~/moray_rag1_raw.fasta", "fasta"))
-#  rag_tr <- nj(dist.dna(rag_ali, "k81"))
-#  clean_rag_tr <- clean_and_root(rag_tr, "Uropterygius_macrocephalus")
-#  plot(clean_rag_tr, direction = "leftward", cex = 1)
+## ---- Summ_1-------------------------------------------------------------
+taxize_summ <- entrez_summary(db="pubmed", id=24555091)
+taxize_summ
 
-## ----fields--------------------------------------------------------------
-search_fields <- entrez_db_searchable("nuccore")
-search_fields
-search_fields$ORGN
+## ---- Summ_2-------------------------------------------------------------
+taxize_summ$articleids
 
-## ----webenvs1, message=FALSE, warning=FALSE, comment=NA, cache=FALSE-----
-snail_search <- entrez_search(db = "nuccore", "Gastropoda[ORGN] AND COI[Gene]", usehistory = "y")
+## ---- Summ_3-------------------------------------------------------------
+taxize_summ$pmcrefcount
 
-## ----webenvs2, message=FALSE, warning=FALSE, comment=NA, cache=FALSE-----
-cookie <- snail_search$WebEnv
-qk <- snail_search$QueryKey
-snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk, rettype = "fasta", retmax = 10)
+## ---- multi_summ---------------------------------------------------------
+vivax_search <- entrez_search(db = "pubmed",
+                              term = "(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])")
+multi_summs <- entrez_summary(db="pubmed", id=vivax_search$ids)
+
+## ---- multi_summ2--------------------------------------------------------
+extract_from_esummary(multi_summs, "fulljournalname")
+
+## ---- multi_summ3--------------------------------------------------------
+date_and_cite <- extract_from_esummary(multi_summs, c("pubdate", "pmcrefcount",  "title"))
+knitr::kable(head(t(date_and_cite)), row.names=FALSE)
+
+## ---- transcript_ids-----------------------------------------------------
+gene_ids <- c(351, 11647)
+linked_seq_ids <- entrez_link(dbfrom="gene", id=gene_ids, db="nuccore")
+linked_transripts <- linked_seq_ids$links$gene_nuccore_refseqrna
+head(linked_transripts)
+
+## ----fetch_fasta---------------------------------------------------------
+all_recs <- entrez_fetch(db="nuccore", id=linked_transripts, rettype="fasta")
+class(all_recs)
+nchar(all_recs)
+
+## ---- peak---------------------------------------------------------------
+cat(strwrap(substr(all_recs, 1, 500)), sep="\n")
+
+## ---- Tt_tax-------------------------------------------------------------
+Tt <- entrez_search(db="taxonomy", term="(Tetrahymena thermophila[ORGN]) AND Species[RANK]")
+tax_rec <- entrez_fetch(db="taxonomy", id=Tt$ids, rettype="xml", parsed=TRUE)
+class(tax_rec)
+
+## ---- Tt_list------------------------------------------------------------
+tax_list <- XML::xmlToList(tax_rec)
+tax_list$Taxon$GeneticCode
+
+## ---- Tt_path------------------------------------------------------------
+tt_lineage <- tax_rec["//LineageEx/Taxon/ScientificName"]
+tt_lineage[1:4]
+
+## ---- Tt_apply-----------------------------------------------------------
+XML::xpathSApply(tax_rec, "//LineageEx/Taxon/ScientificName", XML::xmlValue)
+
+## ---- asthma-------------------------------------------------------------
+upload <- entrez_post(db="omim", id=600807)
+upload
+
+## ---- snail_search-------------------------------------------------------
+entrez_search(db="nuccore", term="COI[Gene] AND Gastropoda[ORGN]")
+
+## ---- snail_history------------------------------------------------------
+snail_coi <- entrez_search(db="nuccore", term="COI[Gene] AND Gastropoda[ORGN]", use_history=TRUE)
+snail_coi
+snail_coi$web_history
+
+## ---- asthma_links-------------------------------------------------------
+asthma_snps <- entrez_link(dbfrom="omim", db="snp", cmd="neighbor_history", id=600807)
+asthma_snps$web_histories
+
+## ---- asthma_links_upload------------------------------------------------
+asthma_snps <- entrez_link(dbfrom="omim", db="snp", cmd="neighbor_history", web_history=upload)
+asthma_snps
+
+## ---- links--------------------------------------------------------------
+snp_summ <- entrez_summary(db="snp", web_history=asthma_snps$web_histories$omim_snp)
+knitr::kable(extract_from_esummary(snp_summ, c("chr", "fxn_class", "global_maf")))
 

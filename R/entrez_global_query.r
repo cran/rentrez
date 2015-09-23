@@ -1,4 +1,4 @@
-#' See how many hits there are for a given term across all NCBI Entrez databases
+#' Find the number of records that match a given term across all NCBI Entrez databases
 #'
 #' 
 #'
@@ -9,7 +9,6 @@
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@return a named vector with counts for each a database
 #'
-#'@import XML
 #' @examples
 #' 
 #' NCBI_data_on_best_butterflies_ever <- entrez_global_query(term="Heliconius")

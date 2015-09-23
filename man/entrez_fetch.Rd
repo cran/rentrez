@@ -4,29 +4,49 @@
 \alias{entrez_fetch}
 \title{Download data from NCBI databases}
 \usage{
-entrez_fetch(db, rettype, retmode = "text", config = NULL, ...)
+entrez_fetch(db, id = NULL, web_history = NULL, rettype, retmode = "text",
+  parsed = FALSE, config = NULL, ...)
 }
 \arguments{
-\item{db}{character Name of the database to use}
+\item{db}{character, name of the database to use}
 
-\item{rettype}{character Format in which to get data (eg, fasta, xml...)}
+\item{id}{vector (numeric or character), unique ID(s) for records in database \code{db}}
 
-\item{retmode}{character Mode in which to receive data, defaults to 'text'}
+\item{web_history,}{a web_history object}
 
-\item{config}{vector configuration options passed to httr::GET}
+\item{rettype}{character, format in which to get data (eg, fasta, xml...)}
 
-\item{\dots}{character Additional terms to add to the request}
+\item{retmode}{character, mode in which to receive data, defaults to 'text'}
+
+\item{parsed}{boolean should entrez_fetch attempt to parse the resulting
+file. Only works with rettype="xml" at present}
+
+\item{config}{vector, httr configuration options passed to httr::GET}
+
+\item{\dots}{character, additional terms to add to the request, see NCBI
+documentation linked to in references for a complete list}
 }
 \value{
 character string containing the file created
+
+XMLInternalDocument a parsed XML document if parsed=TRUE and
+rettype='xml'
 }
 \description{
-Download data from NCBI databases
+A set of unique identifiers mush be specified with either the \code{db}
+argument (which directly specifies the IDs as a numeric or character vector)
+or a \code{web_history} object as returned by
+\code{\link{entrez_link}}, \code{\link{entrez_search}} or
+\code{\link{entrez_post}}. See Table 1 in the linked reference for the set of
+formats available for each database.
 }
 \examples{
 katipo <- "Latrodectus katipo[Organism]"
 katipo_search <- entrez_search(db="nuccore", term=katipo)
 kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="fasta")
+}
+\references{
+\url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EFetch_}
 }
 \seealso{
 \code{\link[httr]{config}} for available configs

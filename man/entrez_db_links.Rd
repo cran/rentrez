@@ -2,32 +2,32 @@
 % Please edit documentation in R/entrez_info.r
 \name{entrez_db_links}
 \alias{entrez_db_links}
-\title{Can be used in conjunction with \code{\link{entrez_link}} to find
-the right name for the \code{db} argument in that function.}
+\title{List available links for records from a given NCBI database}
 \usage{
 entrez_db_links(db, config = NULL)
 }
 \arguments{
-\item{db}{character, name of database t}
+\item{db}{character, name of database to search}
 
 \item{config}{config vector passed to \code{httr::GET}}
 }
 \value{
-An eInfoLink object (sub-classed from list) summarising linked-databases.
+An eInfoLink object (sub-classed from list) summarizing linked-databases.
 Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
 the name of each element (which is the correct name for \code{entrez_link},
 and can be used to get (a little) more information about each linked database
 (see example below).
 }
 \description{
-Can be used in conjunction with \code{\link{entrez_link}} to find
-the right name for the \code{db} argument in that function.
+For a given database, fetch a list of other databases that contain
+cross-referenced records. The names of these records can be used as the
+\code{db} argument in \code{\link{entrez_link}}
 }
 \examples{
 \donttest{
 taxid <- entrez_search(db="taxonomy", term="Osmeriformes")$ids
-(tax_links <- entrez_db_links("taxonomy"))
-tax_links[["pubmed"]]
+tax_links <- entrez_db_links("taxonomy")
+tax_links
 entrez_link(dbfrom="taxonomy", db="pmc", id=taxid)
 
 sra_links <- entrez_db_links("sra")

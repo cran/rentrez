@@ -1,25 +1,30 @@
-#' Summarise an XML record from pubmed.
+#' Summarize an XML record from pubmed.
 #'
+#' Note: this function assumes all records are of the type "PubmedArticle"
+#' and will return an empty record for any other type (including books).
 #'
-#'@import XML
 #'@export
-#'@param raw_xml character the record to be parsed (as a character, 
-#' expected to come from \code{\link{entrez_fetch}})
+#'@param record Either and XMLInternalDocument or character the record to be
+#'parsed ( expected to come from \code{\link{entrez_fetch}})
 #'@return Either a single pubmed_record object, or a list of several 
+#'@importFrom XML xmlName
 #'@examples
+
 #' 
 #' hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 #' hox_rel <- entrez_link(db="pubmed", dbfrom="pubmed", id=hox_paper$ids)
 #' recs <- entrez_fetch(db="pubmed", 
-#'                        id=hox_rel$pubmed_pubmed[1:3], 
+#'                        id=hox_rel$links$pubmed_pubmed[1:3], 
 #'                        rettype="xml")
 #' parse_pubmed_xml(recs)
 #'
 
-parse_pubmed_xml <- function(raw_xml){
-    parsed <- xmlTreeParse(raw_xml, useInternalNodes=TRUE)
-    res <- xpathApply(parsed, 
-                      "/PubmedArticleSet/PubmedArticle", 
+parse_pubmed_xml<- function(record){
+    if(typeof(record) == "character"){
+        record <- xmlTreeParse(record, useInternalNodes=TRUE)
+    }
+    res <- xpathApply(record, 
+                      "/PubmedArticleSet/*", 
                       parse_one_pubmed)
     if(length(res)==1){
         return(res[[1]])
@@ -30,6 +35,16 @@ parse_pubmed_xml <- function(raw_xml){
 
 #The work-horse function - get information from a single xml rec
 parse_one_pubmed <- function(paper){
+    atype <- xmlName(paper) 
+    if( atype != "PubmedArticle" ){
+        pmid = xpathSApply(paper, "//PMID", xmlValue)
+        msg = paste0("Pubmed record ", pmid, " is of type '", atype, 
+                     "' which  rentrez doesn't know how to parse.",
+                     " Returning empty record")
+
+        warning(msg)
+        return(structure(list(), class="pubmed_record", empty=TRUE))
+    }
     get_value <- function(path){
         return(xpathSApply(paper, path, xmlValue))
     }
@@ -46,14 +61,19 @@ parse_one_pubmed <- function(paper){
     res$doi <- get_value(".//ArticleId[@IdType='doi']")
     res$pmid <- get_value(".//ArticleId[@IdType='pubmed']")
     res$abstract <- get_value(".//AbstractText")
-    class(res) <- "pubmed_record"
- return(res) 
+    
+    structure(res, class="pubmed_record", empty=FALSE) 
 }
 
 
 
 #' @export
-print.pubmed_record  <- function(x, ...){
+print.pubmed_record  <- function(x, first_line=TRUE, ...){
+ if( attr(x, "empty")){
+   cat('Pubmed record (empty)\n')
+   return()
+ }                      
+
  if(length(x$authors) == 1){
   display.author <- x$authors[1]
  }
@@ -63,13 +83,20 @@ print.pubmed_record  <- function(x, ...){
  else
    display.author <- paste(x$authors[1], "et al")
    
- display <- with(x, sprintf("%s. (%s). %s %s. %s: %s",
-                      display.author, year, title, journal, volume, pages))
- cat(display)
- cat("\n")
+ display <- with(x, sprintf(" %s. (%s).  %s. %s:%s",
+                      display.author, year, journal, volume, pages))
+ if(first_line){
+     cat("Pubmed record", "\n")
+ }
+ cat(display, "\n")
 }
 
 #' @export
 print.multi_pubmed_record <- function(x, ...){
-    cat(paste( "list of ", length(x), "pubmed records\n"))
+    nrecs <- length(x)
+    cat("List of", nrecs, "pubmed records\n")
+    if( nrecs > 3){
+        sapply(x[1:3], print, first_line=FALSE)
+        cat(".\n.\n.\n")
+    } else sapply(x[1:3], print, first_line=FALSE)
 }
