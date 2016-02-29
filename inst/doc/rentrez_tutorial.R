@@ -71,7 +71,7 @@ all_the_links$links
 all_the_links$links$gene_pmc[1:10]
 
 ## ---- elink_omim---------------------------------------------------------
-all_the_links$links$gene_omim
+all_the_links$links$gene_clinvar
 
 
 ## ---- elink1-------------------------------------------------------------
@@ -167,14 +167,17 @@ snail_coi
 snail_coi$web_history
 
 ## ---- asthma_links-------------------------------------------------------
-asthma_snps <- entrez_link(dbfrom="omim", db="snp", cmd="neighbor_history", id=600807)
-asthma_snps$web_histories
+asthma_clinvar <- entrez_link(dbfrom="omim", db="clinvar", cmd="neighbor_history", id=600807)
+asthma_clinvar$web_histories
 
 ## ---- asthma_links_upload------------------------------------------------
-asthma_snps <- entrez_link(dbfrom="omim", db="snp", cmd="neighbor_history", web_history=upload)
-asthma_snps
+asthma_variants <- entrez_link(dbfrom="omim", db="clinvar", cmd="neighbor_history", web_history=upload)
+asthma_variants
 
 ## ---- links--------------------------------------------------------------
-snp_summ <- entrez_summary(db="snp", web_history=asthma_snps$web_histories$omim_snp)
+snp_links <- entrez_link(dbfrom="clinvar", db="snp", 
+                         web_history=asthma_variants$web_histories$omim_clinvar,
+                         cmd="neighbor_history")
+snp_summ <- entrez_summary(db="snp", web_history=snp_links$web_histories$clinvar_snp)
 knitr::kable(extract_from_esummary(snp_summ, c("chr", "fxn_class", "global_maf")))
 

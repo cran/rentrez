@@ -34,7 +34,7 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, ...
     uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
     args <- list(..., email=entrez_email(), tool=entrez_tool())
     if(by_id){
-        ids_string <- paste0("&id=", args$id, collapse="")
+        ids_string <- paste0("id=", args$id, collapse="&")
         args$id <- NULL
         uri <- paste0(uri, ids_string)
     }else{
@@ -75,7 +75,7 @@ entrez_check  <- function(req){
   if (req$status_code == 414){
       stop("HTTP failure 414, the request is too large. For large requests, try using web history as described in the tutorial")
   }
-  message <- httr::content(req)
+  message <- httr::content(req, as="text")
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
 }
 

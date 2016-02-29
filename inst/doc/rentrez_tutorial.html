@@ -10,7 +10,7 @@
 
 <meta name="author" content="David winter" />
 
-<meta name="date" content="2015-09-22" />
+<meta name="date" content="2016-02-28" />
 
 <title>Rentrez Tutorial</title>
 
@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">Rentrez Tutorial</h1>
 <h4 class="author"><em>David winter</em></h4>
-<h4 class="date"><em>2015-09-22</em></h4>
+<h4 class="date"><em>2016-02-28</em></h4>
 </div>
 
 <div id="TOC">
@@ -91,7 +91,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <div id="introduction-the-ncbi-entrez-and-rentrez." class="section level2">
 <h2>Introduction: The NCBI, entrez and <code>rentrez</code>.</h2>
-<p>The NCBI shares a <em>lot</em> of data. At the time this document was compiled, there were 25.3 million papers in <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a>, including 3.7 million full-text records available in <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed Central</a>. <a href="http://www.ncbi.nlm.nih.gov/nuccore">The NCBI Nucleotide Database</a> (which includes GenBank) has data for 200.9 million different sequences, and <a href="http://www.ncbi.nlm.nih.gov/snp/">dbSNP</a> describes 705.6 million different genetic variants. All of these records can be cross-referenced with the 1.04 million species in the <a href="www.ncbi.nlm.nih.gov/taxonomy">NCBI taxonomy</a> or 24.2 thousand disease-associated records in <a href="http://www.ncbi.nlm.nih.gov/omim">OMIM</a>.</p>
+<p>The NCBI shares a <em>lot</em> of data. At the time this document was compiled, there were 25.8 million papers in <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a>, including 3.9 million full-text records available in <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed Central</a>. <a href="http://www.ncbi.nlm.nih.gov/nuccore">The NCBI Nucleotide Database</a> (which includes GenBank) has data for 195.4 million different sequences, and <a href="http://www.ncbi.nlm.nih.gov/snp/">dbSNP</a> describes 758.7 million different genetic variants. All of these records can be cross-referenced with the 1.11 million species in the <a href="www.ncbi.nlm.nih.gov/taxonomy">NCBI taxonomy</a> or 24.4 thousand disease-associated records in <a href="http://www.ncbi.nlm.nih.gov/omim">OMIM</a>.</p>
 <p>The NCBI makes this data available through a <a href="http://www.ncbi.nlm.nih.gov/">web interface</a>, an <a href="ftp://ftp.ncbi.nlm.nih.gov/">FTP server</a> and through a REST API called the <a href="http://www.ncbi.nlm.nih.gov/books/NBK25500/">Entrez Utilities</a> (<code>Eutils</code> for short). This package provides functions to use that API, allowing users to gather and combine data from multiple NCBI databases in the comfort of an R session or script.</p>
 </div>
 <div id="getting-started-with-the-rentrez" class="section level2">
@@ -101,21 +101,20 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_dbs</span>()</code></pre>
 <pre><code>##  [1] &quot;pubmed&quot;          &quot;protein&quot;         &quot;nuccore&quot;        
 ##  [4] &quot;nucleotide&quot;      &quot;nucgss&quot;          &quot;nucest&quot;         
-##  [7] &quot;structure&quot;       &quot;genome&quot;          &quot;gpipe&quot;          
-## [10] &quot;annotinfo&quot;       &quot;assembly&quot;        &quot;bioproject&quot;     
-## [13] &quot;biosample&quot;       &quot;blastdbinfo&quot;     &quot;books&quot;          
-## [16] &quot;cdd&quot;             &quot;clinvar&quot;         &quot;clone&quot;          
-## [19] &quot;gap&quot;             &quot;gapplus&quot;         &quot;grasp&quot;          
-## [22] &quot;dbvar&quot;           &quot;epigenomics&quot;     &quot;gene&quot;           
-## [25] &quot;gds&quot;             &quot;geoprofiles&quot;     &quot;homologene&quot;     
-## [28] &quot;medgen&quot;          &quot;mesh&quot;            &quot;ncbisearch&quot;     
-## [31] &quot;nlmcatalog&quot;      &quot;omim&quot;            &quot;orgtrack&quot;       
-## [34] &quot;pmc&quot;             &quot;popset&quot;          &quot;probe&quot;          
-## [37] &quot;proteinclusters&quot; &quot;pcassay&quot;         &quot;biosystems&quot;     
-## [40] &quot;pccompound&quot;      &quot;pcsubstance&quot;     &quot;pubmedhealth&quot;   
-## [43] &quot;seqannot&quot;        &quot;snp&quot;             &quot;sra&quot;            
-## [46] &quot;taxonomy&quot;        &quot;unigene&quot;         &quot;gencoll&quot;        
-## [49] &quot;gtr&quot;</code></pre>
+##  [7] &quot;structure&quot;       &quot;genome&quot;          &quot;annotinfo&quot;      
+## [10] &quot;assembly&quot;        &quot;bioproject&quot;      &quot;biosample&quot;      
+## [13] &quot;blastdbinfo&quot;     &quot;books&quot;           &quot;cdd&quot;            
+## [16] &quot;clinvar&quot;         &quot;clone&quot;           &quot;gap&quot;            
+## [19] &quot;gapplus&quot;         &quot;grasp&quot;           &quot;dbvar&quot;          
+## [22] &quot;epigenomics&quot;     &quot;gene&quot;            &quot;gds&quot;            
+## [25] &quot;geoprofiles&quot;     &quot;homologene&quot;      &quot;medgen&quot;         
+## [28] &quot;mesh&quot;            &quot;ncbisearch&quot;      &quot;nlmcatalog&quot;     
+## [31] &quot;omim&quot;            &quot;orgtrack&quot;        &quot;pmc&quot;            
+## [34] &quot;popset&quot;          &quot;probe&quot;           &quot;proteinclusters&quot;
+## [37] &quot;pcassay&quot;         &quot;biosystems&quot;      &quot;pccompound&quot;     
+## [40] &quot;pcsubstance&quot;     &quot;pubmedhealth&quot;    &quot;seqannot&quot;       
+## [43] &quot;snp&quot;             &quot;sra&quot;             &quot;taxonomy&quot;       
+## [46] &quot;unigene&quot;         &quot;gencoll&quot;         &quot;gtr&quot;</code></pre>
 <p>There is a set of functions with names starting <code>entrez_db_</code> that can be used to gather more information about each of these databases:</p>
 <p><strong>Functions that help you learn about NCBI databases</strong></p>
 <table>
@@ -147,7 +146,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 ##  Description: Conserved Domain Database
 ##  DbBuild: Build150814-1106.1
 ##  Count: 50648
-##  LastUpdate: 2015/08/14 18:28</code></pre>
+##  LastUpdate: 2015/08/14 18:42</code></pre>
 <p>… or find out which search terms can be used with the Sequence Read Archive (SRA) database (which contains raw data from sequencing projects):</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_db_searchable</span>(<span class="st">&quot;sra&quot;</span>)</code></pre>
 <pre><code>## Searchable fields for database 'sra'
@@ -172,19 +171,19 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <pre class="sourceCode r"><code class="sourceCode r">r_search &lt;-<span class="st"> </span><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;pubmed&quot;</span>, <span class="dt">term=</span><span class="st">&quot;R Language&quot;</span>)</code></pre>
 <p>The object returned by a search acts like a list, and you can get a summary of its contents by printing it.</p>
 <pre class="sourceCode r"><code class="sourceCode r">r_search</code></pre>
-<pre><code>## Entrez search result with 8433 hits (object contains 20 IDs and no web_history object)
+<pre><code>## Entrez search result with 8852 hits (object contains 20 IDs and no web_history object)
 ##  Search term (as translated):  R[All Fields] AND (&quot;programming languages&quot;[MeSH Te ...</code></pre>
 <p>There are a few things to note here. First, the NCBI’s server has worked out that we meant R as a programming language, and so included the <a href="http://www.ncbi.nlm.nih.gov/mesh">‘MeSH’ term</a> term associated with programming languages. We’ll worry about MeSH terms and other special queries later, for now just note that you can use this feature to check that your search term was interpreted in the way you intended. Second, there are many more ‘hits’ for this search than there are unique IDs contained in this object. That’s because the optional argument <code>retmax</code>, which controls the maximum number of returned values has a default value of 20.</p>
 <p>The IDs are the most important thing returned here. They allow us to fetch records matching those IDs, gather summary data about them or find cross-referenced records in other databases. We access the IDs as a vector using the <code>$</code> operator:</p>
 <pre class="sourceCode r"><code class="sourceCode r">r_search$ids</code></pre>
-<pre><code>##  [1] &quot;26386890&quot; &quot;26386837&quot; &quot;26386709&quot; &quot;26386559&quot; &quot;26384540&quot; &quot;26384513&quot;
-##  [7] &quot;26373402&quot; &quot;26370217&quot; &quot;26368126&quot; &quot;26365951&quot; &quot;26364675&quot; &quot;26362735&quot;
-## [13] &quot;26362046&quot; &quot;26361547&quot; &quot;26358925&quot; &quot;26357948&quot; &quot;26357328&quot; &quot;26356521&quot;
-## [19] &quot;26354595&quot; &quot;26351616&quot;</code></pre>
+<pre><code>##  [1] &quot;26921868&quot; &quot;26911973&quot; &quot;26910752&quot; &quot;26909793&quot; &quot;26909179&quot; &quot;26905794&quot;
+##  [7] &quot;26898715&quot; &quot;26894098&quot; &quot;26891915&quot; &quot;26882831&quot; &quot;26881523&quot; &quot;26880791&quot;
+## [13] &quot;26878332&quot; &quot;26877196&quot; &quot;26873420&quot; &quot;26870249&quot; &quot;26868949&quot; &quot;26866804&quot;
+## [19] &quot;26864379&quot; &quot;26856367&quot;</code></pre>
 <p>If we want to get more than 20 IDs we can do so by increasing the <code>ret_max</code> argument.</p>
 <pre class="sourceCode r"><code class="sourceCode r">another_r_search &lt;-<span class="st"> </span><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;pubmed&quot;</span>, <span class="dt">term=</span><span class="st">&quot;R Language&quot;</span>, <span class="dt">retmax=</span><span class="dv">40</span>)
 another_r_search</code></pre>
-<pre><code>## Entrez search result with 8433 hits (object contains 40 IDs and no web_history object)
+<pre><code>## Entrez search result with 8852 hits (object contains 40 IDs and no web_history object)
 ##  Search term (as translated):  R[All Fields] AND (&quot;programming languages&quot;[MeSH Te ...</code></pre>
 <p>If we want to get IDs for all of the thousands of records that match this search, we can use the NCBI’s web history feature <a href="#web_history">described below</a>.</p>
 <div id="building-search-terms" class="section level3">
@@ -194,19 +193,19 @@ another_r_search</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;sra&quot;</span>,
               <span class="dt">term=</span><span class="st">&quot;Tetrahymena thermophila[ORGN]&quot;</span>,
               <span class="dt">retmax=</span><span class="dv">0</span>)</code></pre>
-<pre><code>## Entrez search result with 97 hits (object contains 0 IDs and no web_history object)
+<pre><code>## Entrez search result with 119 hits (object contains 0 IDs and no web_history object)
 ##  Search term (as translated):  &quot;Tetrahymena thermophila&quot;[Organism]</code></pre>
 <p>We can narrow our focus to only those records that have been added recently (using the colon to specify a range of values):</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;sra&quot;</span>,
               <span class="dt">term=</span><span class="st">&quot;Tetrahymena thermophila[ORGN] AND 2013:2015[PDAT]&quot;</span>,
               <span class="dt">retmax=</span><span class="dv">0</span>)</code></pre>
-<pre><code>## Entrez search result with 53 hits (object contains 0 IDs and no web_history object)
+<pre><code>## Entrez search result with 75 hits (object contains 0 IDs and no web_history object)
 ##  Search term (as translated):  &quot;Tetrahymena thermophila&quot;[Organism] AND 2013[PDAT] ...</code></pre>
 <p>Or include recent records for either <em>T. thermophila</em> or it’s close relative <em>T. borealis</em> (using parentheses to make ANDs and ORs explicit).</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;sra&quot;</span>,
               <span class="dt">term=</span><span class="st">&quot;(Tetrahymena thermophila[ORGN] OR Tetrahymena borealis[ORGN]) AND 2013:2015[PDAT]&quot;</span>,
               <span class="dt">retmax=</span><span class="dv">0</span>)</code></pre>
-<pre><code>## Entrez search result with 53 hits (object contains 0 IDs and no web_history object)
+<pre><code>## Entrez search result with 75 hits (object contains 0 IDs and no web_history object)
 ##  Search term (as translated):  (&quot;Tetrahymena thermophila&quot;[Organism] OR &quot;Tetrahyme ...</code></pre>
 <p>The set of search terms available varies between databases. You can get a list of available terms or any given data base with <code>entrez_db_searchable()</code></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_db_searchable</span>(<span class="st">&quot;sra&quot;</span>)</code></pre>
@@ -247,7 +246,7 @@ year &lt;-<span class="st"> </span><span class="dv">2008</span>:<span class="dv"
 papers &lt;-<span class="st"> </span><span class="kw">sapply</span>(year, search_year, <span class="dt">term=</span><span class="st">&quot;Connectome&quot;</span>, <span class="dt">USE.NAMES=</span><span class="ot">FALSE</span>)
 
 <span class="kw">plot</span>(year, papers, <span class="dt">type=</span><span class="st">'b'</span>, <span class="dt">main=</span><span class="st">&quot;The Rise of the Connectome&quot;</span>)</code></pre>
-<p><img src="data:image/png;base64,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" title alt style="display: block; margin: auto;" /></p>
+<p><img src="data:image/png;base64,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" title alt style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="finding-cross-references-entrez_link" class="section level2">
@@ -265,40 +264,49 @@ all_the_links</code></pre>
 <p>Just as with <code>entrez_search</code> the returned object behaves like a list, and we can learn a little about its contents by printing it. In the case, all of the information is in <code>links</code> (and there’s a lot of them!):</p>
 <pre class="sourceCode r"><code class="sourceCode r">all_the_links$links</code></pre>
 <pre><code>## elink result with information from 53 databases:
-##  [1] gene_bioconcepts               gene_bioproject               
-##  [3] gene_biosystems                gene_biosystems_all           
-##  [5] gene_books                     gene_cdd                      
-##  [7] gene_clinvar                   gene_dbvar                    
-##  [9] gene_gene_h3k4me3              gene_gene_neighbors           
-## [11] gene_genereviews               gene_genome                   
-## [13] gene_genome2                   gene_geoprofiles              
-## [15] gene_gtr                       gene_homologene               
-## [17] gene_medgen_diseases           gene_nuccore                  
-## [19] gene_nuccore_mgc               gene_nuccore_pos              
-## [21] gene_nuccore_refseqgene        gene_nuccore_refseqrna        
-## [23] gene_nucest                    gene_nucest_clust             
-## [25] gene_nucleotide                gene_nucleotide_clust         
-## [27] gene_nucleotide_mgc            gene_nucleotide_mgc_url       
-## [29] gene_nucleotide_pos            gene_omim                     
-## [31] gene_pcassay                   gene_pcassay_alltarget_list   
-## [33] gene_pcassay_alltarget_summary gene_pcassay_proteintarget    
-## [35] gene_pcassay_rnai              gene_pcassay_target           
-## [37] gene_pccompound                gene_pcsubstance              
-## [39] gene_pmc                       gene_pmc_nucleotide           
-## [41] gene_probe                     gene_protein                  
-## [43] gene_protein_refseq            gene_pubmed                   
-## [45] gene_pubmed_citedinomim        gene_pubmed_pmc_nucleotide    
-## [47] gene_pubmed_rif                gene_snp                      
-## [49] gene_snp_geneview              gene_structure                
+##  [1] gene_bioconcepts               gene_biosystems               
+##  [3] gene_biosystems_all            gene_clinvar                  
+##  [5] gene_dbvar                     gene_gene_h3k4me3             
+##  [7] gene_genome                    gene_gtr                      
+##  [9] gene_medgen_diseases           gene_pcassay                  
+## [11] gene_pcassay_alltarget_list    gene_pcassay_alltarget_summary
+## [13] gene_pcassay_rnai              gene_pcassay_target           
+## [15] gene_probe                     gene_structure                
+## [17] gene_bioproject                gene_books                    
+## [19] gene_cdd                       gene_gene_neighbors           
+## [21] gene_genereviews               gene_genome2                  
+## [23] gene_geoprofiles               gene_homologene               
+## [25] gene_nuccore                   gene_nuccore_mgc              
+## [27] gene_nuccore_pos               gene_nuccore_refseqgene       
+## [29] gene_nuccore_refseqrna         gene_nucest                   
+## [31] gene_nucest_clust              gene_nucleotide               
+## [33] gene_nucleotide_clust          gene_nucleotide_mgc           
+## [35] gene_nucleotide_mgc_url        gene_nucleotide_pos           
+## [37] gene_omim                      gene_pcassay_proteintarget    
+## [39] gene_pccompound                gene_pcsubstance              
+## [41] gene_pmc                       gene_pmc_nucleotide           
+## [43] gene_protein                   gene_protein_refseq           
+## [45] gene_pubmed                    gene_pubmed_citedinomim       
+## [47] gene_pubmed_pmc_nucleotide     gene_pubmed_rif               
+## [49] gene_snp                       gene_snp_geneview             
 ## [51] gene_taxonomy                  gene_unigene                  
 ## [53] gene_varview</code></pre>
 <p>The names of the list elements are in the format <code>[source_database]_[linked_database]</code> and the elements themselves contain a vector of linked-IDs. So, if we want to find open access publications associated with this gene we could get linked records in PubMed Central:</p>
 <pre class="sourceCode r"><code class="sourceCode r">all_the_links$links$gene_pmc[<span class="dv">1</span>:<span class="dv">10</span>]</code></pre>
-<pre><code>##  [1] &quot;4502972&quot; &quot;4496119&quot; &quot;4467552&quot; &quot;4410718&quot; &quot;4379859&quot; &quot;4342054&quot; &quot;4314671&quot;
-##  [8] &quot;4295427&quot; &quot;4267249&quot; &quot;4256156&quot;</code></pre>
-<p>Or if were interested in this gene’s role in diseases we could find links to OMIM:</p>
-<pre class="sourceCode r"><code class="sourceCode r">all_the_links$links$gene_omim</code></pre>
-<pre><code>## [1] &quot;605714&quot; &quot;104760&quot; &quot;104300&quot;</code></pre>
+<pre><code>##  [1] &quot;4528011&quot; &quot;4502972&quot; &quot;4496119&quot; &quot;4476499&quot; &quot;4467552&quot; &quot;4418866&quot; &quot;4410718&quot;
+##  [8] &quot;4379859&quot; &quot;4349693&quot; &quot;4342054&quot;</code></pre>
+<p>Or if were interested in this gene’s role in diseases we could find links to clinVar:</p>
+<pre class="sourceCode r"><code class="sourceCode r">all_the_links$links$gene_clinvar</code></pre>
+<pre><code>##  [1] &quot;160886&quot; &quot;155682&quot; &quot;155309&quot; &quot;155093&quot; &quot;155053&quot; &quot;154360&quot; &quot;154063&quot;
+##  [8] &quot;153438&quot; &quot;152839&quot; &quot;151388&quot; &quot;150018&quot; &quot;149551&quot; &quot;149418&quot; &quot;149160&quot;
+## [15] &quot;149035&quot; &quot;148411&quot; &quot;148262&quot; &quot;148180&quot; &quot;146125&quot; &quot;145984&quot; &quot;145474&quot;
+## [22] &quot;145468&quot; &quot;145332&quot; &quot;145107&quot; &quot;144677&quot; &quot;144194&quot; &quot;127268&quot; &quot;98242&quot; 
+## [29] &quot;98241&quot;  &quot;98240&quot;  &quot;98239&quot;  &quot;98238&quot;  &quot;98237&quot;  &quot;98236&quot;  &quot;98235&quot; 
+## [36] &quot;59247&quot;  &quot;59246&quot;  &quot;59245&quot;  &quot;59243&quot;  &quot;59226&quot;  &quot;59224&quot;  &quot;59223&quot; 
+## [43] &quot;59222&quot;  &quot;59221&quot;  &quot;59010&quot;  &quot;59005&quot;  &quot;59004&quot;  &quot;37145&quot;  &quot;32099&quot; 
+## [50] &quot;18106&quot;  &quot;18105&quot;  &quot;18104&quot;  &quot;18103&quot;  &quot;18102&quot;  &quot;18101&quot;  &quot;18100&quot; 
+## [57] &quot;18099&quot;  &quot;18098&quot;  &quot;18097&quot;  &quot;18096&quot;  &quot;18095&quot;  &quot;18094&quot;  &quot;18093&quot; 
+## [64] &quot;18092&quot;  &quot;18091&quot;  &quot;18090&quot;  &quot;18089&quot;  &quot;18088&quot;  &quot;18087&quot;</code></pre>
 </div>
 <div id="narrowing-our-focus" class="section level3">
 <h3>Narrowing our focus</h3>
@@ -334,28 +342,38 @@ paper_links</code></pre>
 ##  $Url: http://linkinghub.elsevier ...
 ## 
 ## $ID_25500142[[2]]
+## Linkout from Europe PubMed Central 
+##  $Url: http://europepmc.org/abstr ...
+## 
+## $ID_25500142[[3]]
 ## Linkout from Ovid Technologies, Inc. 
 ##  $Url: http://ovidsp.ovid.com/ovi ...
 ## 
-## $ID_25500142[[3]]
+## $ID_25500142[[4]]
+## Linkout from PubMed Central 
+##  $Url: http://www.ncbi.nlm.nih.go ...
+## 
+## $ID_25500142[[5]]
 ## Linkout from Genetics Home Reference 
 ##  $Url: http://ghr.nlm.nih.gov/gen ...
 ## 
-## $ID_25500142[[4]]
+## $ID_25500142[[6]]
 ## Linkout from MedlinePlus Health Information 
 ##  $Url: https://www.nlm.nih.gov/me ...
 ## 
-## $ID_25500142[[5]]
+## $ID_25500142[[7]]
 ## Linkout from Mouse Genome Informatics (MGI) 
 ##  $Url: http://www.informatics.jax ...</code></pre>
 <p>Each of those linkout objects contains quite a lot of information, but the URL is probably the most useful. For that reason, <code>rentrez</code> provides the function <code>linkout_urls</code> to make extracting just the URL simple:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">linkout_urls</span>(paper_links)</code></pre>
 <pre><code>## $ID_25500142
 ## [1] &quot;http://linkinghub.elsevier.com/retrieve/pii/S0014-4886(14)00393-8&quot;      
-## [2] &quot;http://ovidsp.ovid.com/ovidweb.cgi?T=JS&amp;PAGE=linkout&amp;SEARCH=25500142.ui&quot;
-## [3] &quot;http://ghr.nlm.nih.gov/gene=APP&quot;                                        
-## [4] &quot;https://www.nlm.nih.gov/medlineplus/alzheimersdisease.html&quot;             
-## [5] &quot;http://www.informatics.jax.org/marker/reference/25500142&quot;</code></pre>
+## [2] &quot;http://europepmc.org/abstract/MED/25500142&quot;                             
+## [3] &quot;http://ovidsp.ovid.com/ovidweb.cgi?T=JS&amp;PAGE=linkout&amp;SEARCH=25500142.ui&quot;
+## [4] &quot;http://www.ncbi.nlm.nih.gov/pmc/articles/pmid/25500142/&quot;                
+## [5] &quot;http://ghr.nlm.nih.gov/gene=APP&quot;                                        
+## [6] &quot;https://www.nlm.nih.gov/medlineplus/alzheimersdisease.html&quot;             
+## [7] &quot;http://www.informatics.jax.org/marker/reference/25500142&quot;</code></pre>
 <p>The full list of options for the <code>cmd</code> argument are given in in-line documentation (<code>?entrez_link</code>). If you are interested in finding full text records for a large number of articles checkout the package <a href="https://github.com/ropensci/fulltext">fulltext</a> which makes use of multiple sources (including the NCBI) to discover the full text articles.</p>
 </div>
 <div id="using-more-than-one-id" class="section level3">
@@ -428,7 +446,7 @@ taxize_summ</code></pre>
 ## 8      pmcid       5             pmc-id: PMC3901538;</code></pre>
 <p>…or see how many times the article has been cited in PubMed Central papers</p>
 <pre class="sourceCode r"><code class="sourceCode r">taxize_summ$pmcrefcount</code></pre>
-<pre><code>## [1] 3</code></pre>
+<pre><code>## [1] 5</code></pre>
 </div>
 <div id="dealing-with-many-records" class="section level3">
 <h3>Dealing with many records</h3>
@@ -474,12 +492,12 @@ knitr::<span class="kw">kable</span>(<span class="kw">head</span>(<span class="k
 <tbody>
 <tr class="odd">
 <td align="left">2014</td>
-<td align="left">1</td>
+<td align="left">3</td>
 <td align="left">Prevalence of polymorphisms in antifolate drug resistance molecular marker genes pvdhfr and pvdhps in clinical isolates of Plasmodium vivax from Kolkata, India.</td>
 </tr>
 <tr class="even">
 <td align="left">2013 Sep 5</td>
-<td align="left">1</td>
+<td align="left">2</td>
 <td align="left">Prevalence and patterns of antifolate and chloroquine drug resistance markers in Plasmodium vivax across Pakistan.</td>
 </tr>
 <tr class="odd">
@@ -494,12 +512,12 @@ knitr::<span class="kw">kable</span>(<span class="kw">head</span>(<span class="k
 </tr>
 <tr class="odd">
 <td align="left">2010 Sep</td>
-<td align="left">11</td>
+<td align="left">13</td>
 <td align="left">Mutations in the antifolate-resistance-associated genes dihydrofolate reductase and dihydropteroate synthase in Plasmodium vivax isolates from malaria-endemic countries.</td>
 </tr>
 <tr class="even">
 <td align="left">2010 Sep</td>
-<td align="left">3</td>
+<td align="left">5</td>
 <td align="left">Plasmodium vivax in the Democratic Republic of East Timor: Parasite prevalence and antifolate resistance-associated mutations.</td>
 </tr>
 </tbody>
@@ -518,11 +536,12 @@ linked_transripts &lt;-<span class="st"> </span>linked_seq_ids$links$gene_nuccor
 <span class="kw">head</span>(linked_transripts)</code></pre>
 <pre><code>## [1] &quot;755509222&quot; &quot;755509221&quot; &quot;755509220&quot; &quot;568930486&quot; &quot;563317858&quot; &quot;563317856&quot;</code></pre>
 <p>Now we can get our sequences with <code>entrez_fetch</code>, setting <code>rettype</code> to “fasta” (the list of formats available for <a href="http://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/">each database is give in this table</a>):</p>
-<pre class="sourceCode r"><code class="sourceCode r">all_recs &lt;-<span class="st"> </span><span class="kw">entrez_fetch</span>(<span class="dt">db=</span><span class="st">&quot;nuccore&quot;</span>, <span class="dt">id=</span>linked_transripts, <span class="dt">rettype=</span><span class="st">&quot;fasta&quot;</span>)
-<span class="kw">class</span>(all_recs)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">all_recs &lt;-<span class="st"> </span><span class="kw">entrez_fetch</span>(<span class="dt">db=</span><span class="st">&quot;nuccore&quot;</span>, <span class="dt">id=</span>linked_transripts, <span class="dt">rettype=</span><span class="st">&quot;fasta&quot;</span>)</code></pre>
+<pre><code>## No encoding supplied: defaulting to UTF-8.</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(all_recs)</code></pre>
 <pre><code>## [1] &quot;character&quot;</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nchar</span>(all_recs)</code></pre>
-<pre><code>## [1] 55525</code></pre>
+<pre><code>## [1] 55475</code></pre>
 <p>Congratulations, now you have a really huge character vector! Rather than printing all those thousands of bases we can take a peak at the top of the file:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(<span class="kw">strwrap</span>(<span class="kw">substr</span>(all_recs, <span class="dv">1</span>, <span class="dv">500</span>)), <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre>
 <pre><code>## &gt;gi|755509222|ref|XM_006538499.2| PREDICTED: Mus musculus alkaline
@@ -587,81 +606,74 @@ tt_lineage[<span class="dv">1</span>:<span class="dv">4</span>]</code></pre>
 <p>If you have a list of many NCBI IDs that you want to use later on, you can post them to the NCBI’s severs. In order to provide a brief example, I’m going to post just one ID, the <code>omim</code> identifier for asthma:</p>
 <pre class="sourceCode r"><code class="sourceCode r">upload &lt;-<span class="st"> </span><span class="kw">entrez_post</span>(<span class="dt">db=</span><span class="st">&quot;omim&quot;</span>, <span class="dt">id=</span><span class="dv">600807</span>)
 upload</code></pre>
-<pre><code>## Web history object (QueryKey = 1, WebEnv = NCID_1_53902...)</code></pre>
+<pre><code>## Web history object (QueryKey = 1, WebEnv = NCID_1_55396...)</code></pre>
 <p>The NCBI sends you back some information you can use to refer to the posted IDs. In <code>rentrez</code>, that information is represented as a <code>web_history</code> object.</p>
 </div>
 <div id="get-a-web_history-object-from-entrez_search-or-entrez_link" class="section level3">
 <h3>Get a <code>web_history</code> object from <code>entrez_search</code> or <code>entrez_link()</code></h3>
 <p>In addition to directly uploading IDs to the NCBI, you can use the web history features with <code>entrez_search</code> and <code>entrez_link</code>. For instance, imagine you wanted to find all of the sequences of the widely-studied gene COI from all snails (which are members of the taxonomic group Gastropoda):</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;nuccore&quot;</span>, <span class="dt">term=</span><span class="st">&quot;COI[Gene] AND Gastropoda[ORGN]&quot;</span>)</code></pre>
-<pre><code>## Entrez search result with 53635 hits (object contains 20 IDs and no web_history object)
+<pre><code>## Entrez search result with 57082 hits (object contains 20 IDs and no web_history object)
 ##  Search term (as translated):  COI[Gene] AND &quot;Gastropoda&quot;[Organism]</code></pre>
 <p>That’s a lot of sequences! If you really wanted to download all of these it would be a good idea to save all those IDs to the server by setting <code>use_history</code> to <code>TRUE</code> (note you now get a <code>web_history</code> object along with your normal search result):</p>
 <pre class="sourceCode r"><code class="sourceCode r">snail_coi &lt;-<span class="st"> </span><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;nuccore&quot;</span>, <span class="dt">term=</span><span class="st">&quot;COI[Gene] AND Gastropoda[ORGN]&quot;</span>, <span class="dt">use_history=</span><span class="ot">TRUE</span>)
 snail_coi</code></pre>
-<pre><code>## Entrez search result with 53635 hits (object contains 20 IDs and a web_history object)
+<pre><code>## Entrez search result with 57082 hits (object contains 20 IDs and a web_history object)
 ##  Search term (as translated):  COI[Gene] AND &quot;Gastropoda&quot;[Organism]</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">snail_coi$web_history</code></pre>
-<pre><code>## Web history object (QueryKey = 1, WebEnv = NCID_1_14906...)</code></pre>
-<p>Similarity, <code>entrez_link()</code> can return <code>web_history</code> objects by using the <code>cmd</code> <code>neighbor_history</code>. Let’s find SNPs associated with asthma (using the <code>omim</code> ID mentioned above):</p>
-<pre class="sourceCode r"><code class="sourceCode r">asthma_snps &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">&quot;omim&quot;</span>, <span class="dt">db=</span><span class="st">&quot;snp&quot;</span>, <span class="dt">cmd=</span><span class="st">&quot;neighbor_history&quot;</span>, <span class="dt">id=</span><span class="dv">600807</span>)
-asthma_snps$web_histories</code></pre>
-<pre><code>## $omim_snp
-## Web history object (QueryKey = 1, WebEnv = NCID_1_14906...)
-## 
-## $omim_snp_genegenotype
-## Web history object (QueryKey = 2, WebEnv = NCID_1_14906...)
-## 
-## $omim_snp_geneview
-## Web history object (QueryKey = 3, WebEnv = NCID_1_14906...)</code></pre>
+<pre><code>## Web history object (QueryKey = 1, WebEnv = NCID_1_55396...)</code></pre>
+<p>Similarity, <code>entrez_link()</code> can return <code>web_history</code> objects by using the <code>cmd</code> <code>neighbor_history</code>. Let’s find genetic variants (from the clinvar database) associated with asthma (using the same OMIM ID we identified earlier):</p>
+<pre class="sourceCode r"><code class="sourceCode r">asthma_clinvar &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">&quot;omim&quot;</span>, <span class="dt">db=</span><span class="st">&quot;clinvar&quot;</span>, <span class="dt">cmd=</span><span class="st">&quot;neighbor_history&quot;</span>, <span class="dt">id=</span><span class="dv">600807</span>)
+asthma_clinvar$web_histories</code></pre>
+<pre><code>## $omim_clinvar
+## Web history object (QueryKey = 1, WebEnv = NCID_1_55386...)</code></pre>
 <p>As you can see, instead of returning lists of IDs for each linked database (as it would be default), <code>entrez_link()</code> now returns a list of web_histories.</p>
 </div>
 <div id="use-a-web_history-object" class="section level3">
 <h3>Use a <code>web_history</code> object</h3>
 <p>Once you have those IDs stored on the NCBI’s servers, you are going to want to do something with them. The functions <code>entrez_fetch()</code> <code>entrez_summary()</code> and <code>entrez_link()</code> can all use <code>web_history</code> objects in exactly the same way they use IDs.</p>
-<p>So, we could repeat the last example (finding SNPs linked to asthma), but this time using the ID we uploaded earlier</p>
-<pre class="sourceCode r"><code class="sourceCode r">asthma_snps &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">&quot;omim&quot;</span>, <span class="dt">db=</span><span class="st">&quot;snp&quot;</span>, <span class="dt">cmd=</span><span class="st">&quot;neighbor_history&quot;</span>, <span class="dt">web_history=</span>upload)
-asthma_snps</code></pre>
+<p>So, we could repeat the last example (finding variants linked to asthma), but this time using the ID we uploaded earlier</p>
+<pre class="sourceCode r"><code class="sourceCode r">asthma_variants &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">&quot;omim&quot;</span>, <span class="dt">db=</span><span class="st">&quot;clinvar&quot;</span>, <span class="dt">cmd=</span><span class="st">&quot;neighbor_history&quot;</span>, <span class="dt">web_history=</span>upload)
+asthma_variants</code></pre>
 <pre><code>## elink object with contents:
 ##  $web_histories: Objects containing web history information</code></pre>
-<p>… then summarize each linked SNP using <code>entrez_summary()</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">snp_summ &lt;-<span class="st"> </span><span class="kw">entrez_summary</span>(<span class="dt">db=</span><span class="st">&quot;snp&quot;</span>, <span class="dt">web_history=</span>asthma_snps$web_histories$omim_snp)
+<p>… if we want to get some genetic information about these variants we need to map our clinvar IDs to SNP IDs:</p>
+<pre class="sourceCode r"><code class="sourceCode r">snp_links &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">&quot;clinvar&quot;</span>, <span class="dt">db=</span><span class="st">&quot;snp&quot;</span>, 
+                         <span class="dt">web_history=</span>asthma_variants$web_histories$omim_clinvar,
+                         <span class="dt">cmd=</span><span class="st">&quot;neighbor_history&quot;</span>)
+snp_summ &lt;-<span class="st"> </span><span class="kw">entrez_summary</span>(<span class="dt">db=</span><span class="st">&quot;snp&quot;</span>, <span class="dt">web_history=</span>snp_links$web_histories$clinvar_snp)
 knitr::<span class="kw">kable</span>(<span class="kw">extract_from_esummary</span>(snp_summ, <span class="kw">c</span>(<span class="st">&quot;chr&quot;</span>, <span class="st">&quot;fxn_class&quot;</span>, <span class="st">&quot;global_maf&quot;</span>)))</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th align="left"></th>
-<th align="left">11079657</th>
-<th align="left">2786098</th>
-<th align="left">1031772</th>
-<th align="left">1031771</th>
-<th align="left">545659</th>
+<th align="left">41364547</th>
+<th align="left">11558538</th>
+<th align="left">2303067</th>
+<th align="left">20541</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">chr</td>
-<td align="left">17</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="left">2</td>
 <td align="left">11</td>
+<td align="left">2</td>
+<td align="left">5</td>
+<td align="left">5</td>
 </tr>
 <tr class="even">
 <td align="left">fxn_class</td>
-<td align="left">intron-variant</td>
-<td align="left">intron-variant</td>
-<td align="left">downstream-variant-500B</td>
-<td align="left"></td>
-<td align="left">utr-variant-3-prime</td>
+<td align="left">intron-variant,utr-variant-5-prime</td>
+<td align="left">missense,reference,utr-variant-5-prime</td>
+<td align="left">missense,reference</td>
+<td align="left">missense,reference</td>
 </tr>
 <tr class="odd">
 <td align="left">global_maf</td>
-<td align="left">A=0.4295/2151</td>
-<td align="left">T=0.1569/786</td>
-<td align="left">G=0.2131/1067</td>
-<td align="left">T=0.2582/1293</td>
-<td align="left">C=0.3419/1712</td>
+<td align="left">A=0.0036/18</td>
+<td align="left">T=0.0595/298</td>
+<td align="left">G=0.4331/2169</td>
+<td align="left">A=0.2700/1352</td>
 </tr>
 </tbody>
 </table>
