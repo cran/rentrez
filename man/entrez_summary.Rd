@@ -5,12 +5,14 @@
 \title{Get summaries of objects in NCBI datasets from a unique ID}
 \usage{
 entrez_summary(db, id = NULL, web_history = NULL, version = c("2.0",
-  "1.0"), always_return_list = FALSE, config = NULL, ...)
+  "1.0"), always_return_list = FALSE, retmode = NULL, config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for}
 
-\item{id}{vector with unique ID(s) for records in database \code{db}.}
+\item{id}{vector with unique ID(s) for records in database \code{db}.
+In the case of sequence databases these IDs can take form of an
+NCBI accession followed by a version number (eg AF123456.1 or AF123456.2)}
 
 \item{web_history}{A web_history object}
 
@@ -18,6 +20,9 @@ entrez_summary(db, id = NULL, web_history = NULL, version = c("2.0",
 
 \item{always_return_list}{logical, return a list  of esummary objects even
 when only one ID is provided (see description for a note about this option)}
+
+\item{retmode}{either "xml" or "json". By default, xml will be used for
+version 1.0 records, json for version 2.0.}
 
 \item{config}{vector configuration options passed to \code{httr::GET}}
 
@@ -81,4 +86,3 @@ single objects as well as lists.
 \code{\link{extract_from_esummary}} which can be used to extract
 elements from a list of esummary records
 }
-

@@ -1,6 +1,6 @@
 Package: rentrez
-Version: 1.0.4
-Date: 2016-10-26
+Version: 1.1.0
+Date: 2017-05-22
 Title: Entrez in R
 Authors@R: c(
  person("David", "Winter", role=c("aut", "cre"), 
@@ -18,12 +18,12 @@ Description: Provides an R interface to the NCBI's EUtils API
     results of those searches and pull data into their R sessions.
 VignetteBuilder: knitr
 License: MIT + file LICENSE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2016-10-25 21:45:43 UTC; dwinter
+Packaged: 2017-06-01 02:02:33 UTC; david
 Author: David Winter [aut, cre],
   Scott Chamberlain [ctb],
   Han Guangchun [ctb]
 Maintainer: David Winter <david.winter@gmail.com>
 Repository: CRAN
-Date/Publication: 2016-10-26 10:37:53
+Date/Publication: 2017-06-01 03:54:10 UTC
