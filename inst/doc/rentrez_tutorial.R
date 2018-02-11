@@ -181,3 +181,7 @@ snp_links <- entrez_link(dbfrom="clinvar", db="snp",
 snp_summ <- entrez_summary(db="snp", web_history=snp_links$web_histories$clinvar_snp)
 knitr::kable(extract_from_esummary(snp_summ, c("chr", "fxn_class", "global_maf")))
 
+## ---- set_key------------------------------------------------------------
+set_entrez_key("ABCD123")
+Sys.getenv("ENTREZ_KEY")
+

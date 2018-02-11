@@ -12,11 +12,11 @@
 #'@param id vector with unique ID(s) for records in database \code{db}. 
 #'@param web_history a web_history object  
 #'@param dbfrom character Name of database from which the Id(s) originate
-#'@param by_id logial If FALSE (default) return a single 
+#'@param by_id logical If FALSE (default) return a single 
 #' \code{elink} objects containing links for all of the provided \code{id}s. 
 #' Alternatively, if TRUE return a list of \code{elink} objects, one for each 
 #' ID in \code{id}. 
-#'@param cmd link function to use. Allowled values include
+#'@param cmd link function to use. Allowed values include
 #' \itemize{
 #'   \item neighbor (default). Returns a set of IDs in \code{db} linked to the
 #'   input IDs in \code{dbfrom}.
@@ -64,7 +64,6 @@ entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbo
     } 
     response <- do.call(make_entrez_query,args)
     record <- parse_response(response, 'xml')
-    Sys.sleep(0.33)
     res <- parse_elink(record, cmd=cmd, by_id=by_id)
     if(!is.null(id) & by_id){
         if(length(res) != length(id)){
