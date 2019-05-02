@@ -204,13 +204,13 @@ hr {
 <h2>Introduction: The NCBI, entrez and <code>rentrez</code>.</h2>
 
 <p>The NCBI shares a <em>lot</em> of data. At the time this document was compiled, there
-were 28.2 million papers in <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a>,
-including 4.9 million full-text records available in <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed Central</a>.
-<a href="http://www.ncbi.nlm.nih.gov/nuccore">The NCBI Nucleotide Database</a> (which includes GenBank) has data for 256.7
+were 29.7 million papers in <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a>,
+including 5.6 million full-text records available in <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed Central</a>.
+<a href="http://www.ncbi.nlm.nih.gov/nuccore">The NCBI Nucleotide Database</a> (which includes GenBank) has data for 401.1
 million different sequences, and <a href="http://www.ncbi.nlm.nih.gov/snp/">dbSNP</a> describes
-1070.2 million different genetic variants. All of these
-records can be cross-referenced with the  1.33 million
-species in the <a href="www.ncbi.nlm.nih.gov/taxonomy">NCBI taxonomy</a> or 25.7 thousand disease-associated records
+674.1 million different genetic variants. All of these
+records can be cross-referenced with the  1.73 million
+species in the <a href="www.ncbi.nlm.nih.gov/taxonomy">NCBI taxonomy</a> or 26.2 thousand disease-associated records
 in <a href="http://www.ncbi.nlm.nih.gov/omim">OMIM</a>.</p>
 
 <p>The NCBI makes this data available through a <a href="http://www.ncbi.nlm.nih.gov/">web interface</a>,
@@ -248,10 +248,10 @@ way around the NCBI&#39;s databases. </p>
 ## [31] &quot;nlmcatalog&quot;      &quot;omim&quot;            &quot;orgtrack&quot;       
 ## [34] &quot;pmc&quot;             &quot;popset&quot;          &quot;probe&quot;          
 ## [37] &quot;proteinclusters&quot; &quot;pcassay&quot;         &quot;biosystems&quot;     
-## [40] &quot;pccompound&quot;      &quot;pcsubstance&quot;     &quot;pubmedhealth&quot;   
-## [43] &quot;seqannot&quot;        &quot;snp&quot;             &quot;sra&quot;            
-## [46] &quot;taxonomy&quot;        &quot;biocollections&quot;  &quot;unigene&quot;        
-## [49] &quot;gencoll&quot;         &quot;gtr&quot;
+## [40] &quot;pccompound&quot;      &quot;pcsubstance&quot;     &quot;seqannot&quot;       
+## [43] &quot;snp&quot;             &quot;sra&quot;             &quot;taxonomy&quot;       
+## [46] &quot;biocollections&quot;  &quot;unigene&quot;         &quot;gencoll&quot;        
+## [49] &quot;gtr&quot;
 </code></pre>
 
 <p>There is a set of functions with names starting <code>entrez_db_</code> that can be used to
@@ -288,9 +288,9 @@ database &#39;cdd&#39;&hellip;</p>
 <pre><code>##  DbName: cdd
 ##  MenuName: Conserved Domains
 ##  Description: Conserved Domain Database
-##  DbBuild: Build170330-1240.1
-##  Count: 56066
-##  LastUpdate: 2017/03/31 15:56
+##  DbBuild: Build190405-1636.1
+##  Count: 57242
+##  LastUpdate: 2019/04/05 20:21
 </code></pre>
 
 <p>&hellip; or find out which search terms can be used with the Sequence Read Archive (SRA)
@@ -344,7 +344,7 @@ its contents by printing it.</p>
 <pre><code class="r">r_search
 </code></pre>
 
-<pre><code>## Entrez search result with 10792 hits (object contains 20 IDs and no web_history object)
+<pre><code>## Entrez search result with 11990 hits (object contains 20 IDs and no web_history object)
 ##  Search term (as translated):  R[All Fields] AND (&quot;programming languages&quot;[MeSH Te ...
 </code></pre>
 
@@ -366,10 +366,10 @@ cross-referenced records in other databases. We access the IDs as a vector using
 <pre><code class="r">r_search$ids
 </code></pre>
 
-<pre><code>##  [1] &quot;29500728&quot; &quot;29500026&quot; &quot;29499366&quot; &quot;29496601&quot; &quot;29496195&quot; &quot;29490518&quot;
-##  [7] &quot;29490021&quot; &quot;29489693&quot; &quot;29489446&quot; &quot;29488835&quot; &quot;29483354&quot; &quot;29483353&quot;
-## [13] &quot;29481342&quot; &quot;29476512&quot; &quot;29472165&quot; &quot;29472110&quot; &quot;29470175&quot; &quot;29466552&quot;
-## [19] &quot;29462238&quot; &quot;29459980&quot;
+<pre><code>##  [1] &quot;31038840&quot; &quot;31038735&quot; &quot;31038330&quot; &quot;31035919&quot; &quot;31035177&quot; &quot;31034698&quot;
+##  [7] &quot;31032035&quot; &quot;31032001&quot; &quot;31026661&quot; &quot;31024385&quot; &quot;31019992&quot; &quot;31019986&quot;
+## [13] &quot;31018505&quot; &quot;31016215&quot; &quot;31014126&quot; &quot;31014101&quot; &quot;31011201&quot; &quot;31007436&quot;
+## [19] &quot;31006364&quot; &quot;30999311&quot;
 </code></pre>
 
 <p>If we want to get more than 20 IDs we can do so by increasing the <code>ret_max</code> argument.</p>
@@ -378,7 +378,7 @@ cross-referenced records in other databases. We access the IDs as a vector using
 another_r_search
 </code></pre>
 
-<pre><code>## Entrez search result with 10792 hits (object contains 40 IDs and no web_history object)
+<pre><code>## Entrez search result with 11990 hits (object contains 40 IDs and no web_history object)
 ##  Search term (as translated):  R[All Fields] AND (&quot;programming languages&quot;[MeSH Te ...
 </code></pre>
 
@@ -399,7 +399,7 @@ combine multiple such searches using the boolean operators <code>AND</code>, <co
               retmax=0)
 </code></pre>
 
-<pre><code>## Entrez search result with 282 hits (object contains 0 IDs and no web_history object)
+<pre><code>## Entrez search result with 421 hits (object contains 0 IDs and no web_history object)
 ##  Search term (as translated):  &quot;Tetrahymena thermophila&quot;[Organism]
 </code></pre>
 
@@ -555,7 +555,7 @@ information is in <code>links</code> (and there&#39;s a lot of them!):</p>
 <pre><code class="r">all_the_links$links
 </code></pre>
 
-<pre><code>## elink result with information from 54 databases:
+<pre><code>## elink result with information from 56 databases:
 ##  [1] gene_bioconcepts               gene_biosystems               
 ##  [3] gene_biosystems_all            gene_clinvar                  
 ##  [5] gene_clinvar_specific          gene_dbvar                    
@@ -563,26 +563,27 @@ information is in <code>links</code> (and there&#39;s a lot of them!):</p>
 ##  [9] gene_homologene                gene_medgen_diseases          
 ## [11] gene_pcassay_alltarget_list    gene_pcassay_alltarget_summary
 ## [13] gene_pcassay_rnai              gene_pcassay_target           
-## [15] gene_probe                     gene_structure                
-## [17] gene_bioproject                gene_books                    
+## [15] gene_probe                     gene_snp                      
+## [17] gene_structure                 gene_bioproject               
 ## [19] gene_cdd                       gene_gene_h3k4me3             
 ## [21] gene_gene_neighbors            gene_genereviews              
 ## [23] gene_genome2                   gene_geoprofiles              
 ## [25] gene_nuccore                   gene_nuccore_mgc              
 ## [27] gene_nuccore_pos               gene_nuccore_refseqgene       
-## [29] gene_nuccore_refseqrna         gene_nucest                   
-## [31] gene_nucest_clust              gene_nucleotide               
-## [33] gene_nucleotide_clust          gene_nucleotide_mgc           
-## [35] gene_nucleotide_mgc_url        gene_nucleotide_pos           
-## [37] gene_omim                      gene_pcassay_proteintarget    
-## [39] gene_pccompound                gene_pcsubstance              
-## [41] gene_pmc                       gene_pmc_nucleotide           
-## [43] gene_protein                   gene_protein_refseq           
-## [45] gene_pubmed                    gene_pubmed_citedinomim       
-## [47] gene_pubmed_pmc_nucleotide     gene_pubmed_rif               
-## [49] gene_snp                       gene_snp_geneview             
-## [51] gene_sparcle                   gene_taxonomy                 
-## [53] gene_unigene                   gene_varview
+## [29] gene_nuccore_refseqrna         gene_nucest_clust             
+## [31] gene_nucleotide                gene_nucleotide_clust         
+## [33] gene_nucleotide_mgc            gene_nucleotide_mgc_url       
+## [35] gene_nucleotide_pos            gene_omim                     
+## [37] gene_pcassay_proteintarget     gene_pccompound               
+## [39] gene_pcsubstance               gene_pmc                      
+## [41] gene_pmc_nucleotide            gene_protein                  
+## [43] gene_protein_refseq            gene_pubmed                   
+## [45] gene_pubmed_all                gene_pubmed_citedinomim       
+## [47] gene_pubmed_highlycited        gene_pubmed_latest            
+## [49] gene_pubmed_pmc_nucleotide     gene_pubmed_reviews           
+## [51] gene_pubmed_rif                gene_snp_geneview             
+## [53] gene_sparcle                   gene_taxonomy                 
+## [55] gene_unigene                   gene_varview
 </code></pre>
 
 <p>The names of the list elements are in the format <code>[source_database]_[linked_database]</code> 
@@ -593,8 +594,8 @@ in PubMed Central:</p>
 <pre><code class="r">all_the_links$links$gene_pmc[1:10]
 </code></pre>
 
-<pre><code>##  [1] &quot;5796664&quot; &quot;5761312&quot; &quot;5714184&quot; &quot;5650912&quot; &quot;5561919&quot; &quot;5560349&quot; &quot;5559291&quot;
-##  [8] &quot;5548265&quot; &quot;5540602&quot; &quot;5434815&quot;
+<pre><code>##  [1] &quot;6275581&quot; &quot;6145937&quot; &quot;6114740&quot; &quot;6080689&quot; &quot;6042101&quot; &quot;5924922&quot; &quot;5875988&quot;
+##  [8] &quot;5796664&quot; &quot;5761312&quot; &quot;5719975&quot;
 </code></pre>
 
 <p>Or if were interested in this gene&#39;s role in diseases we could find links to clinVar:</p>
@@ -602,25 +603,28 @@ in PubMed Central:</p>
 <pre><code class="r">all_the_links$links$gene_clinvar
 </code></pre>
 
-<pre><code>##   [1] &quot;453313&quot; &quot;450260&quot; &quot;446856&quot; &quot;446855&quot; &quot;446854&quot; &quot;443979&quot; &quot;442418&quot;
-##   [8] &quot;397432&quot; &quot;396808&quot; &quot;396332&quot; &quot;396150&quot; &quot;394309&quot; &quot;391496&quot; &quot;369359&quot;
-##  [15] &quot;339659&quot; &quot;339658&quot; &quot;339657&quot; &quot;339656&quot; &quot;339655&quot; &quot;339654&quot; &quot;339653&quot;
-##  [22] &quot;339652&quot; &quot;339651&quot; &quot;339650&quot; &quot;339649&quot; &quot;339648&quot; &quot;339647&quot; &quot;339646&quot;
-##  [29] &quot;339645&quot; &quot;339644&quot; &quot;339643&quot; &quot;339642&quot; &quot;339641&quot; &quot;339640&quot; &quot;339639&quot;
-##  [36] &quot;339638&quot; &quot;339637&quot; &quot;339636&quot; &quot;339635&quot; &quot;339634&quot; &quot;339633&quot; &quot;339632&quot;
-##  [43] &quot;339631&quot; &quot;339630&quot; &quot;339629&quot; &quot;339628&quot; &quot;339627&quot; &quot;339626&quot; &quot;339625&quot;
-##  [50] &quot;339624&quot; &quot;339623&quot; &quot;339622&quot; &quot;339621&quot; &quot;339620&quot; &quot;339619&quot; &quot;253512&quot;
-##  [57] &quot;253403&quot; &quot;236549&quot; &quot;236548&quot; &quot;236547&quot; &quot;221889&quot; &quot;160886&quot; &quot;155682&quot;
-##  [64] &quot;155309&quot; &quot;155093&quot; &quot;155053&quot; &quot;154360&quot; &quot;154063&quot; &quot;153438&quot; &quot;152839&quot;
-##  [71] &quot;151388&quot; &quot;150018&quot; &quot;149551&quot; &quot;149418&quot; &quot;149160&quot; &quot;149035&quot; &quot;148411&quot;
-##  [78] &quot;148262&quot; &quot;148180&quot; &quot;146125&quot; &quot;145984&quot; &quot;145474&quot; &quot;145468&quot; &quot;145332&quot;
-##  [85] &quot;145107&quot; &quot;144677&quot; &quot;144194&quot; &quot;127268&quot; &quot;98242&quot;  &quot;98241&quot;  &quot;98240&quot; 
-##  [92] &quot;98239&quot;  &quot;98238&quot;  &quot;98237&quot;  &quot;98236&quot;  &quot;98235&quot;  &quot;59247&quot;  &quot;59246&quot; 
-##  [99] &quot;59245&quot;  &quot;59243&quot;  &quot;59226&quot;  &quot;59224&quot;  &quot;59223&quot;  &quot;59222&quot;  &quot;59221&quot; 
-## [106] &quot;59010&quot;  &quot;59005&quot;  &quot;59004&quot;  &quot;37145&quot;  &quot;32099&quot;  &quot;18106&quot;  &quot;18105&quot; 
-## [113] &quot;18104&quot;  &quot;18103&quot;  &quot;18102&quot;  &quot;18101&quot;  &quot;18100&quot;  &quot;18099&quot;  &quot;18098&quot; 
-## [120] &quot;18097&quot;  &quot;18096&quot;  &quot;18095&quot;  &quot;18094&quot;  &quot;18093&quot;  &quot;18092&quot;  &quot;18091&quot; 
-## [127] &quot;18090&quot;  &quot;18089&quot;  &quot;18088&quot;  &quot;18087&quot;
+<pre><code>##   [1] &quot;604878&quot; &quot;604877&quot; &quot;604783&quot; &quot;604782&quot; &quot;604779&quot; &quot;604777&quot; &quot;585434&quot;
+##   [8] &quot;585433&quot; &quot;585432&quot; &quot;585431&quot; &quot;585430&quot; &quot;585429&quot; &quot;585428&quot; &quot;585427&quot;
+##  [15] &quot;564661&quot; &quot;546904&quot; &quot;524210&quot; &quot;524209&quot; &quot;524208&quot; &quot;521455&quot; &quot;453313&quot;
+##  [22] &quot;450260&quot; &quot;446856&quot; &quot;446855&quot; &quot;446854&quot; &quot;443979&quot; &quot;442418&quot; &quot;397432&quot;
+##  [29] &quot;396808&quot; &quot;396332&quot; &quot;396150&quot; &quot;394309&quot; &quot;391496&quot; &quot;369359&quot; &quot;339659&quot;
+##  [36] &quot;339658&quot; &quot;339657&quot; &quot;339656&quot; &quot;339655&quot; &quot;339654&quot; &quot;339653&quot; &quot;339652&quot;
+##  [43] &quot;339651&quot; &quot;339650&quot; &quot;339649&quot; &quot;339648&quot; &quot;339647&quot; &quot;339646&quot; &quot;339645&quot;
+##  [50] &quot;339644&quot; &quot;339643&quot; &quot;339642&quot; &quot;339641&quot; &quot;339640&quot; &quot;339639&quot; &quot;339638&quot;
+##  [57] &quot;339637&quot; &quot;339636&quot; &quot;339635&quot; &quot;339634&quot; &quot;339633&quot; &quot;339632&quot; &quot;339631&quot;
+##  [64] &quot;339630&quot; &quot;339629&quot; &quot;339628&quot; &quot;339627&quot; &quot;339626&quot; &quot;339625&quot; &quot;339624&quot;
+##  [71] &quot;339623&quot; &quot;339622&quot; &quot;339621&quot; &quot;339620&quot; &quot;339619&quot; &quot;253512&quot; &quot;253403&quot;
+##  [78] &quot;236549&quot; &quot;236548&quot; &quot;236547&quot; &quot;221889&quot; &quot;160886&quot; &quot;155682&quot; &quot;155309&quot;
+##  [85] &quot;155093&quot; &quot;155053&quot; &quot;154360&quot; &quot;154063&quot; &quot;153438&quot; &quot;152839&quot; &quot;151388&quot;
+##  [92] &quot;150018&quot; &quot;149551&quot; &quot;149418&quot; &quot;149160&quot; &quot;149035&quot; &quot;148411&quot; &quot;148262&quot;
+##  [99] &quot;148180&quot; &quot;146125&quot; &quot;145984&quot; &quot;145474&quot; &quot;145468&quot; &quot;145332&quot; &quot;145107&quot;
+## [106] &quot;144677&quot; &quot;144194&quot; &quot;127268&quot; &quot;98242&quot;  &quot;98241&quot;  &quot;98240&quot;  &quot;98239&quot; 
+## [113] &quot;98238&quot;  &quot;98237&quot;  &quot;98236&quot;  &quot;98235&quot;  &quot;59247&quot;  &quot;59246&quot;  &quot;59245&quot; 
+## [120] &quot;59243&quot;  &quot;59226&quot;  &quot;59224&quot;  &quot;59223&quot;  &quot;59222&quot;  &quot;59221&quot;  &quot;59010&quot; 
+## [127] &quot;59005&quot;  &quot;59004&quot;  &quot;37145&quot;  &quot;32099&quot;  &quot;18106&quot;  &quot;18105&quot;  &quot;18104&quot; 
+## [134] &quot;18103&quot;  &quot;18102&quot;  &quot;18101&quot;  &quot;18100&quot;  &quot;18099&quot;  &quot;18098&quot;  &quot;18097&quot; 
+## [141] &quot;18096&quot;  &quot;18095&quot;  &quot;18094&quot;  &quot;18093&quot;  &quot;18091&quot;  &quot;18090&quot;  &quot;18089&quot; 
+## [148] &quot;18088&quot;  &quot;18087&quot;
 </code></pre>
 
 <p>###Narrowing our focus</p>
@@ -659,8 +663,9 @@ transcripts from our gene of interest.</p>
 <pre><code class="r">nuc_links$links$gene_nuccore_refseqrna
 </code></pre>
 
-<pre><code>##  [1] &quot;324021747&quot; &quot;324021746&quot; &quot;324021739&quot; &quot;324021737&quot; &quot;324021735&quot;
-##  [6] &quot;228008405&quot; &quot;228008404&quot; &quot;228008403&quot; &quot;228008402&quot; &quot;228008401&quot;
+<pre><code>##  [1] &quot;1519241754&quot; &quot;1370481385&quot; &quot;324021747&quot;  &quot;324021746&quot;  &quot;324021739&quot; 
+##  [6] &quot;324021737&quot;  &quot;324021735&quot;  &quot;228008405&quot;  &quot;228008404&quot;  &quot;228008402&quot; 
+## [11] &quot;228008401&quot;
 </code></pre>
 
 <p>We can use these ids in calls to <code>entrez_fetch()</code> or <code>entrez_summary()</code> to learn
@@ -692,7 +697,7 @@ source of data on this paper:</p>
 <pre><code>## $ID_25500142
 ## $ID_25500142[[1]]
 ## Linkout from Elsevier Science 
-##  $Url: http://linkinghub.elsevier ...
+##  $Url: https://linkinghub.elsevie ...
 ## 
 ## $ID_25500142[[2]]
 ## Linkout from Europe PubMed Central 
@@ -723,7 +728,7 @@ function <code>linkout_urls</code> to make extracting just the URL simple:</p>
 </code></pre>
 
 <pre><code>## $ID_25500142
-## [1] &quot;http://linkinghub.elsevier.com/retrieve/pii/S0014-4886(14)00393-8&quot;      
+## [1] &quot;https://linkinghub.elsevier.com/retrieve/pii/S0014-4886(14)00393-8&quot;     
 ## [2] &quot;http://europepmc.org/abstract/MED/25500142&quot;                             
 ## [3] &quot;http://ovidsp.ovid.com/ovidweb.cgi?T=JS&amp;PAGE=linkout&amp;SEARCH=25500142.ui&quot;
 ## [4] &quot;https://www.ncbi.nlm.nih.gov/pmc/articles/pmid/25500142/&quot;               
@@ -756,13 +761,14 @@ all_links_together
 <pre><code class="r">all_links_together$links$gene_protein
 </code></pre>
 
-<pre><code>##  [1] &quot;1034662002&quot; &quot;1034662000&quot; &quot;1034661998&quot; &quot;1034661996&quot; &quot;1034661994&quot;
-##  [6] &quot;1034661992&quot; &quot;558472750&quot;  &quot;545685826&quot;  &quot;194394158&quot;  &quot;166221824&quot; 
-## [11] &quot;154936864&quot;  &quot;148697547&quot;  &quot;148697546&quot;  &quot;122346659&quot;  &quot;119602646&quot; 
-## [16] &quot;119602645&quot;  &quot;119602644&quot;  &quot;119602643&quot;  &quot;119602642&quot;  &quot;81899807&quot;  
-## [21] &quot;74215266&quot;   &quot;74186774&quot;   &quot;37787317&quot;   &quot;37787309&quot;   &quot;37787307&quot;  
-## [26] &quot;37787305&quot;   &quot;37589273&quot;   &quot;33991172&quot;   &quot;31982089&quot;   &quot;26339824&quot;  
-## [31] &quot;26329351&quot;   &quot;21619615&quot;   &quot;10834676&quot;
+<pre><code>##  [1] &quot;1387845369&quot; &quot;1387845338&quot; &quot;1370513171&quot; &quot;1370513169&quot; &quot;1370513166&quot;
+##  [6] &quot;1034662002&quot; &quot;1034662000&quot; &quot;1034661998&quot; &quot;1034661996&quot; &quot;1034661994&quot;
+## [11] &quot;1034661992&quot; &quot;558472750&quot;  &quot;545685826&quot;  &quot;194394158&quot;  &quot;166221824&quot; 
+## [16] &quot;154936864&quot;  &quot;148697547&quot;  &quot;148697546&quot;  &quot;122346659&quot;  &quot;119602646&quot; 
+## [21] &quot;119602645&quot;  &quot;119602644&quot;  &quot;119602643&quot;  &quot;119602642&quot;  &quot;81899807&quot;  
+## [26] &quot;74215266&quot;   &quot;74186774&quot;   &quot;37787317&quot;   &quot;37787309&quot;   &quot;37787307&quot;  
+## [31] &quot;37787305&quot;   &quot;37589273&quot;   &quot;33991172&quot;   &quot;31982089&quot;   &quot;26339824&quot;  
+## [36] &quot;26329351&quot;   &quot;21619615&quot;   &quot;10834676&quot;
 </code></pre>
 
 <p>Although this behaviour might sometimes be useful, it means we&#39;ve lost track of
@@ -783,11 +789,12 @@ all_links_sep
 </code></pre>
 
 <pre><code>## [[1]]
-##  [1] &quot;1034662002&quot; &quot;1034662000&quot; &quot;1034661998&quot; &quot;1034661996&quot; &quot;1034661994&quot;
-##  [6] &quot;1034661992&quot; &quot;558472750&quot;  &quot;545685826&quot;  &quot;194394158&quot;  &quot;166221824&quot; 
-## [11] &quot;154936864&quot;  &quot;122346659&quot;  &quot;119602646&quot;  &quot;119602645&quot;  &quot;119602644&quot; 
-## [16] &quot;119602643&quot;  &quot;119602642&quot;  &quot;37787309&quot;   &quot;37787307&quot;   &quot;37787305&quot;  
-## [21] &quot;33991172&quot;   &quot;21619615&quot;   &quot;10834676&quot;  
+##  [1] &quot;1387845369&quot; &quot;1387845338&quot; &quot;1370513171&quot; &quot;1370513169&quot; &quot;1370513166&quot;
+##  [6] &quot;1034662002&quot; &quot;1034662000&quot; &quot;1034661998&quot; &quot;1034661996&quot; &quot;1034661994&quot;
+## [11] &quot;1034661992&quot; &quot;558472750&quot;  &quot;545685826&quot;  &quot;194394158&quot;  &quot;166221824&quot; 
+## [16] &quot;154936864&quot;  &quot;122346659&quot;  &quot;119602646&quot;  &quot;119602645&quot;  &quot;119602644&quot; 
+## [21] &quot;119602643&quot;  &quot;119602642&quot;  &quot;37787309&quot;   &quot;37787307&quot;   &quot;37787305&quot;  
+## [26] &quot;33991172&quot;   &quot;21619615&quot;   &quot;10834676&quot;  
 ## 
 ## [[2]]
 ##  [1] &quot;148697547&quot; &quot;148697546&quot; &quot;81899807&quot;  &quot;74215266&quot;  &quot;74186774&quot; 
@@ -854,7 +861,7 @@ article identifier&hellip;</p>
 <pre><code class="r">taxize_summ$pmcrefcount
 </code></pre>
 
-<pre><code>## [1] 15
+<pre><code>## [1] 29
 </code></pre>
 
 <p>###Dealing with many records</p>
@@ -920,32 +927,32 @@ knitr::kable(head(t(date_and_cite)), row.names=FALSE)
 </thead><tbody>
 <tr>
 <td align="left">2017 Dec</td>
-<td align="left"></td>
+<td align="left">1</td>
 <td align="left">Distribution of Mutations Associated with Antifolate and Chloroquine Resistance among Imported &lt;i&gt;Plasmodium vivax&lt;/i&gt; in the State of Qatar.</td>
 </tr>
 <tr>
 <td align="left">2017 Mar 16</td>
-<td align="left">2</td>
+<td align="left">6</td>
 <td align="left">Clinical and molecular surveillance of drug resistant vivax malaria in Myanmar (2009-2016).</td>
 </tr>
 <tr>
 <td align="left">2014 Aug</td>
-<td align="left"></td>
+<td align="left">2</td>
 <td align="left">Prevalence of mutations in the antifolates resistance-associated genes (dhfr and dhps) in Plasmodium vivax parasites from Eastern and Central Sudan.</td>
 </tr>
 <tr>
 <td align="left">2014</td>
-<td align="left">5</td>
+<td align="left">6</td>
 <td align="left">Prevalence of polymorphisms in antifolate drug resistance molecular marker genes pvdhfr and pvdhps in clinical isolates of Plasmodium vivax from Kolkata, India.</td>
 </tr>
 <tr>
 <td align="left">2013 Sep 5</td>
-<td align="left">3</td>
+<td align="left">4</td>
 <td align="left">Prevalence and patterns of antifolate and chloroquine drug resistance markers in Plasmodium vivax across Pakistan.</td>
 </tr>
 <tr>
 <td align="left">2012 Dec</td>
-<td align="left">14</td>
+<td align="left">17</td>
 <td align="left">Prevalence of drug resistance-associated gene mutations in Plasmodium vivax in Central China.</td>
 </tr>
 </tbody></table>
@@ -970,8 +977,8 @@ linked_transripts &lt;- linked_seq_ids$links$gene_nuccore_refseqrna
 head(linked_transripts)
 </code></pre>
 
-<pre><code>## [1] &quot;1039766414&quot; &quot;1039766413&quot; &quot;1039766411&quot; &quot;1039766410&quot; &quot;1039766409&quot;
-## [6] &quot;563317856&quot;
+<pre><code>## [1] &quot;1519241754&quot; &quot;1370481385&quot; &quot;1039766414&quot; &quot;1039766413&quot; &quot;1039766411&quot;
+## [6] &quot;1039766410&quot;
 </code></pre>
 
 <p>Now we can get our sequences with <code>entrez_fetch</code>, setting <code>rettype</code> to &ldquo;fasta&rdquo;
@@ -987,7 +994,7 @@ class(all_recs)
 <pre><code class="r">nchar(all_recs)
 </code></pre>
 
-<pre><code>## [1] 55183
+<pre><code>## [1] 57045
 </code></pre>
 
 <p>Congratulations, now you have a really huge character vector! Rather than
@@ -996,14 +1003,14 @@ printing all those thousands of bases we can take a peak at the top of the file:
 <pre><code class="r">cat(strwrap(substr(all_recs, 1, 500)), sep=&quot;\n&quot;)
 </code></pre>
 
-<pre><code>## &gt;XM_006538500.2 PREDICTED: Mus musculus alkaline phosphatase,
-## liver/bone/kidney (Alpl), transcript variant X5, mRNA
-## GCGCCCGTGGCTTGCGCGACTCCCACGCGCGCGCTCCGCCGGTCCCGCAGTGACTGTCCCAGCCACGGTG
-## GGGACACGTGGAAGGTCAGGCTCCCTGGGGACCCACGACCTCCCGCTCCGGACTCCGCGCGCATCTCTTG
-## TGGCCTGGCAGGATGATGGACGTGGCGCCCGCTGAGCCGCTACCCAGGACCTCACCCTCGTGCTAAGCAC
-## CTGCTCCCGGTGCCCACGCGCCTCCGTAGTCCACAGCTGCGCCCTTCGTGGTCCCTTGGCACTCTGTCCC
-## GTTGGTGTCTAAAGTAGTTGGGGAGCAGCAGGAAGAAGGCACGTGCTGCGATCTTTGGCGGGAGAGATCG
-## GAGACCGCGTGCTAGTGTCTGTCTGAGAG
+<pre><code>## &gt;NM_000484.4 Homo sapiens amyloid beta precursor protein (APP),
+## transcript variant 1, mRNA
+## GTCAGTTTCCTCGGCAGCGGTAGGCGAGAGCACGCGGAGGAGCGTGCGCGGGGGCCCCGGGAGACGGCGG
+## CGGTGGCGGCGCGGGCAGAGCAAGGACGCGGCGGATCCCACTCGCACAGCAGCGCACTCGGTGCCCCGCG
+## CAGGGTCGCGATGCTGCCCGGTTTGGCACTGCTCCTGCTGGCCGCCTGGACGGCTCGGGCGCTGGAGGTA
+## CCCACTGATGGTAATGCTGGCCTGCTGGCTGAACCCCAGATTGCCATGTTCTGTGGCAGACTGAACATGC
+## ACATGAATGTCCAGAATGGGAAGTGGGATTCAGATCCATCAGGGACCAAAACCTGCATTGATACCAAGGA
+## AGGCATCCTGCAGTATTGCCAAGAAGTCTACCCTGAACTGCAGATCACCAATGT
 </code></pre>
 
 <p>If we wanted to use these sequences in some other application we could write them 
@@ -1112,7 +1119,7 @@ ID, the <code>omim</code> identifier for asthma:</p>
 upload
 </code></pre>
 
-<pre><code>## Web history object (QueryKey = 1, WebEnv = NCID_1_68403...)
+<pre><code>## Web history object (QueryKey = 1, WebEnv = NCID_1_26484...)
 </code></pre>
 
 <p>The NCBI sends you back some information you can use to refer to the posted IDs. 
@@ -1133,7 +1140,7 @@ find all of the sequences of the widely-studied gene COI from all snails
 <pre><code class="r">entrez_search(db=&quot;nuccore&quot;, term=&quot;COI[Gene] AND Gastropoda[ORGN]&quot;)
 </code></pre>
 
-<pre><code>## Entrez search result with 72586 hits (object contains 20 IDs and no web_history object)
+<pre><code>## Entrez search result with 84692 hits (object contains 20 IDs and no web_history object)
 ##  Search term (as translated):  COI[Gene] AND &quot;Gastropoda&quot;[Organism]
 </code></pre>
 
@@ -1146,14 +1153,14 @@ normal search result):</p>
 snail_coi
 </code></pre>
 
-<pre><code>## Entrez search result with 72586 hits (object contains 20 IDs and a web_history object)
+<pre><code>## Entrez search result with 84692 hits (object contains 20 IDs and a web_history object)
 ##  Search term (as translated):  COI[Gene] AND &quot;Gastropoda&quot;[Organism]
 </code></pre>
 
 <pre><code class="r">snail_coi$web_history
 </code></pre>
 
-<pre><code>## Web history object (QueryKey = 1, WebEnv = NCID_1_15784...)
+<pre><code>## Web history object (QueryKey = 1, WebEnv = NCID_1_26474...)
 </code></pre>
 
 <p>Similarity, <code>entrez_link()</code> can return <code>web_history</code> objects by using the <code>cmd</code>
@@ -1165,7 +1172,7 @@ asthma_clinvar$web_histories
 </code></pre>
 
 <pre><code>## $omim_clinvar
-## Web history object (QueryKey = 1, WebEnv = NCID_1_15784...)
+## Web history object (QueryKey = 1, WebEnv = NCID_1_26481...)
 </code></pre>
 
 <p>As you can see, instead of returning lists of IDs for each linked database (as
@@ -1215,15 +1222,15 @@ knitr::kable(extract_from_esummary(snp_summ, c(&quot;chr&quot;, &quot;fxn_class&
 </tr>
 <tr>
 <td align="left">fxn_class</td>
-<td align="left">intron-variant,utr-variant-5-prime</td>
-<td align="left">intron-variant,missense,nc-transcript-variant,reference,utr-variant-5-prime</td>
-<td align="left">missense,reference</td>
+<td align="left">5_prime_UTR_variant,intron_variant</td>
+<td align="left">genic_downstream_transcript_variant,intron_variant,non_coding_transcript_variant,5_prime_UTR_variant,coding_sequence_variant,missense_variant</td>
+<td align="left">coding_sequence_variant,missense_variant</td>
 </tr>
 <tr>
-<td align="left">global_maf</td>
-<td align="left">A=0.0036/18</td>
-<td align="left">T=0.0595/298</td>
-<td align="left">A=0.2700/1352</td>
+<td align="left">NA</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
 </tr>
 </tbody></table>
 
