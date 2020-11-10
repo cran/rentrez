@@ -4,8 +4,16 @@
 \alias{entrez_fetch}
 \title{Download data from NCBI databases}
 \usage{
-entrez_fetch(db, id = NULL, web_history = NULL, rettype, retmode = "",
-  parsed = FALSE, config = NULL, ...)
+entrez_fetch(
+  db,
+  id = NULL,
+  web_history = NULL,
+  rettype,
+  retmode = "",
+  parsed = FALSE,
+  config = NULL,
+  ...
+)
 }
 \arguments{
 \item{db}{character, name of the database to use}
@@ -69,7 +77,7 @@ kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="native"
 }
 }
 \references{
-\url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EFetch_}
+\url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EFetch_}
 }
 \seealso{
 \code{\link[httr]{config}} for available '\code{httr}` configs

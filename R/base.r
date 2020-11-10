@@ -1,12 +1,12 @@
 #What's going on under the hood. As far as possible we are following the best
 #practices for API packages suggested by hadly/httr:
 #
-#  http://cran.r-project.org/web/packages/httr/vignettes/api-packages.html
+#  https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html
 #
 #and also conforming to the NBCI's requirements about rate limiting and 
 #adding identifiers to each request:
 #
-# http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requirements
+# https://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requirements
 #
 
 
@@ -49,13 +49,13 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
         return( list(uri = uri, args=args ) )
     }
     
-    #Seemingly, NCBI moved to https but not http v2.0?
+    #Seemingly, NCBI moved to https but not https v2.0?
     # (thatnks Jeff Hammerbacher for report/solution)
     #
     # if no httr::config was passed we will add one
     if(is.null(config)){
          config = httr::config(http_version = 2)
-    # otherwise add http version, checkign we aren't overwriting something
+    # otherwise add https version, checkign we aren't overwriting something
     # passed in (seems unlikely, but worth checking?)
     # 
     } else {
@@ -78,12 +78,13 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
 
 
 #set the sleep time, depending on presence of api_key in the arguments. Used by
-# make_entrez_query
+# make_entrez_query. These add a little extra time as we still frequently hit
+# the rate-limit when using 1/10 and 1/3 as times
 sleep_time <- function(argument_list){
     if("api_key" %in% names(argument_list)){
-        return(0.1)
+        return(0.13)
     }
-    1/3
+    0.35
 }
 ##
 # Check for that we have either the ID or the web-history functions are 
@@ -120,6 +121,11 @@ entrez_check  <- function(req){
       stop("HTTP failure: 502, bad gateway. This error code is often returned when trying to download many records in a single request.  Try using web history as described in the rentrez tutorial")
   }
   message <- httr::content(req, as="text", encoding="UTF-8")
+  if (req$status_code == 429){
+     #too many requests. First sleep to precent us racking up more
+     Sys.sleep(0.3)
+     stop(paste("HTTP failure: 429, too many requests. Functions that contact the NCBI should not be called in parallel. If you are using a shared IP, consider registerring for an API key as described in the rate-limiting section of rentrez tutorial. NCBI message:\n", message)) 
+  }
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
 }
 

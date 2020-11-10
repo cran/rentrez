@@ -45,7 +45,7 @@
 #'\code{\link[XML]{xmlTreeParse}} or, if \code{retmode} was set to json a list
 #' resulting from the returned JSON file being parsed with
 #' \code{\link[jsonlite]{fromJSON}}.
-#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESearch_} 
+#'@references \url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESearch_} 
 #'@examples
 #' \dontrun{
 #'    query <- "Gastropoda[Organism] AND COI[Gene]"
@@ -55,7 +55,7 @@
 #'    snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
 #'                              file_format = "fasta", retmax = 10)
 #'}
-#'\donttest{
+#'\dontrun{
 #' 
 #' fly_id <- entrez_search(db="taxonomy", term="Drosophila")
 #' #Oh, right. There is a genus and a subgenus name Drosophila...

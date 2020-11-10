@@ -1,305 +1,210 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Introduction: The NCBI, entrez and <code>rentrez</code>.</title>
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="David winter" />
+
+<meta name="date" content="2020-11-11" />
+
+<title>Rentrez Tutorial</title>
+
+<link href="data:text/css;charset=utf-8,%0Aa%2Eanchor%2Dsection%20%7Bmargin%2Dleft%3A%2010px%3B%20visibility%3A%20hidden%3B%20color%3A%20inherit%3B%7D%0Aa%2Eanchor%2Dsection%3A%3Abefore%20%7Bcontent%3A%20%27%23%27%3B%7D%0A%2EhasAnchor%3Ahover%20a%2Eanchor%2Dsection%20%7Bvisibility%3A%20visible%3B%7D%0A" rel="stylesheet" />
+<script src="data:application/x-javascript;base64,Ly8gQW5jaG9yIHNlY3Rpb25zIHYxLjAgd3JpdHRlbiBieSBBdHN1c2hpIFlhc3Vtb3RvIG9uIE9jdCAzcmQsIDIwMjAuCmRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoJ0RPTUNvbnRlbnRMb2FkZWQnLCBmdW5jdGlvbigpIHsKICAvLyBEbyBub3RoaW5nIGlmIEFuY2hvckpTIGlzIHVzZWQKICBpZiAodHlwZW9mIHdpbmRvdy5hbmNob3JzID09PSAnb2JqZWN0JyAmJiBhbmNob3JzLmhhc093blByb3BlcnR5KCdoYXNBbmNob3JKU0xpbmsnKSkgewogICAgcmV0dXJuOwogIH0KCiAgY29uc3QgaCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJ2gxLCBoMiwgaDMsIGg0LCBoNSwgaDYnKTsKCiAgLy8gRG8gbm90aGluZyBpZiBzZWN0aW9ucyBhcmUgYWxyZWFkeSBhbmNob3JlZAogIGlmIChBcnJheS5mcm9tKGgpLnNvbWUoeCA9PiB4LmNsYXNzTGlzdC5jb250YWlucygnaGFzQW5jaG9yJykpKSB7CiAgICByZXR1cm4gbnVsbDsKICB9CgogIC8vIFVzZSBzZWN0aW9uIGlkIHdoZW4gcGFuZG9jIHJ1bnMgd2l0aCAtLXNlY3Rpb24tZGl2cwogIGNvbnN0IHNlY3Rpb25faWQgPSBmdW5jdGlvbih4KSB7CiAgICByZXR1cm4gKCh4LmNsYXNzTGlzdC5jb250YWlucygnc2VjdGlvbicpIHx8ICh4LnRhZ05hbWUgPT09ICdTRUNUSU9OJykpCiAgICAgICAgICAgID8geC5pZCA6ICcnKTsKICB9OwoKICAvLyBBZGQgYW5jaG9ycwogIGguZm9yRWFjaChmdW5jdGlvbih4KSB7CiAgICBjb25zdCBpZCA9IHguaWQgfHwgc2VjdGlvbl9pZCh4LnBhcmVudEVsZW1lbnQpOwogICAgaWYgKGlkID09PSAnJykgewogICAgICByZXR1cm4gbnVsbDsKICAgIH0KICAgIGxldCBhbmNob3IgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdhJyk7CiAgICBhbmNob3IuaHJlZiA9ICcjJyArIGlkOwogICAgYW5jaG9yLmNsYXNzTGlzdCA9IFsnYW5jaG9yLXNlY3Rpb24nXTsKICAgIHguY2xhc3NMaXN0LmFkZCgnaGFzQW5jaG9yJyk7CiAgICB4LmFwcGVuZENoaWxkKGFuY2hvcik7CiAgfSk7Cn0pOwo="></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
   }
-};
-</script>
-
-<!-- Styles for R syntax highlighter -->
-<style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
-
-   pre .literal {
-     color: #990073
-   }
-
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
-</style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
+})();
 </script>
 
 
 
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
-}
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
-}
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
-}
-
-h1 {
-   font-size:2.2em;
-}
-
-h2 {
-   font-size:1.8em;
-}
-
-h3 {
-   font-size:1.4em;
-}
-
-h4 {
-   font-size:1.0em;
-}
-
-h5 {
-   font-size:0.9em;
-}
-
-h6 {
-   font-size:0.8em;
-}
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
-}
-
-pre, img {
-  max-width: 100%;
-}
-pre {
-  overflow-x: auto;
-}
-pre code {
-   display: block; padding: 0.5em;
-}
-
-code {
-  font-size: 92%;
-  border: 1px solid #ccc;
-}
-
-code[class] {
-  background-color: #F8F8F8;
-}
-
-table, td, th {
-  border: none;
-}
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
-}
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
-}
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
-}
-</style>
 
 
 
 </head>
 
 <body>
+
+
+
+
+<h1 class="title toc-ignore">Rentrez Tutorial</h1>
+<h4 class="author">David winter</h4>
+<h4 class="date">2020-11-11</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction-the-ncbi-entrez-and-rentrez.">Introduction: The NCBI, entrez and <code>rentrez</code>.</a></li>
+<li><a href="#getting-started-with-the-rentrez">Getting started with the rentrez</a></li>
+<li><a href="#searching-databases-entrez_search">Searching databases: <code>entrez_search()</code></a><ul>
+<li><a href="#building-search-terms">Building search terms</a></li>
+<li><a href="#using-the-filter-field">Using the Filter field</a></li>
+<li><a href="#precise-queries-using-mesh-terms">Precise queries using MeSH terms</a></li>
+<li><a href="#advanced-counting">Advanced counting</a></li>
+</ul></li>
+<li><a href="#finding-cross-references-entrez_link">Finding cross-references : <code>entrez_link()</code>:</a><ul>
+<li><a href="#my-god-its-full-of-links">My god, it's full of links</a></li>
+<li><a href="#narrowing-our-focus">Narrowing our focus</a></li>
+<li><a href="#external-links">External links</a></li>
+<li><a href="#using-more-than-one-id">Using more than one ID</a></li>
+</ul></li>
+<li><a href="#getting-summary-data-entrez_summary">Getting summary data: <code>entrez_summary()</code></a><ul>
+<li><a href="#the-summary-record">The summary record</a></li>
+<li><a href="#dealing-with-many-records">Dealing with many records</a></li>
+</ul></li>
+<li><a href="#fetching-full-records-entrez_fetch">Fetching full records: <code>entrez_fetch()</code></a><ul>
+<li><a href="#fetch-dna-sequences-in-fasta-format">Fetch DNA sequences in fasta format</a></li>
+<li><a href="#fetch-a-parsed-xml-document">Fetch a parsed XML document</a></li>
+</ul></li>
+<li><a href="#using-ncbis-web-history-features">Using NCBI's Web History features</a><ul>
+<li><a href="#post-a-set-of-ids-to-the-ncbi-for-later-use-entrez_post">Post a set of IDs to the NCBI for later use: <code>entrez_post()</code></a></li>
+<li><a href="#get-a-web_history-object-from-entrez_search-or-entrez_link">Get a <code>web_history</code> object from <code>entrez_search</code> or <code>entrez_link()</code></a></li>
+<li><a href="#use-a-web_history-object">Use a <code>web_history</code> object</a></li>
+</ul></li>
+<li><a href="#rate-limiting-and-api-keys">Rate-limiting and API Keys</a><ul>
+<li><a href="#slowing-rentrez-down-when-you-hit-the-rate-limit">Slowing rentrez down when you hit the rate-limit</a></li>
+</ul></li>
+<li><a href="#what-next">What next ?</a></li>
+</ul>
+</div>
+
+<div id="introduction-the-ncbi-entrez-and-rentrez." class="section level2">
 <h2>Introduction: The NCBI, entrez and <code>rentrez</code>.</h2>
-
-<p>The NCBI shares a <em>lot</em> of data. At the time this document was compiled, there
-were 29.7 million papers in <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a>,
-including 5.6 million full-text records available in <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed Central</a>.
-<a href="http://www.ncbi.nlm.nih.gov/nuccore">The NCBI Nucleotide Database</a> (which includes GenBank) has data for 401.1
-million different sequences, and <a href="http://www.ncbi.nlm.nih.gov/snp/">dbSNP</a> describes
-674.1 million different genetic variants. All of these
-records can be cross-referenced with the  1.73 million
-species in the <a href="www.ncbi.nlm.nih.gov/taxonomy">NCBI taxonomy</a> or 26.2 thousand disease-associated records
-in <a href="http://www.ncbi.nlm.nih.gov/omim">OMIM</a>.</p>
-
-<p>The NCBI makes this data available through a <a href="http://www.ncbi.nlm.nih.gov/">web interface</a>,
-an <a href="ftp://ftp.ncbi.nlm.nih.gov/">FTP server</a> and through a REST API called the
-<a href="http://www.ncbi.nlm.nih.gov/books/NBK25500/">Entrez Utilities</a> (<code>Eutils</code> for
-short). This package provides functions to use that API, allowing users to
-gather and combine data from multiple NCBI databases in the comfort of an R
-session or script.</p>
-
+<p>The NCBI shares a <em>lot</em> of data. At the time this document was compiled, there were 31.7 million papers in <a href="https://pubmed.ncbi.nlm.nih.gov/">PubMed</a>, including 6.6 million full-text records available in <a href="https://www.ncbi.nlm.nih.gov/pmc/">PubMed Central</a>. <a href="https://www.ncbi.nlm.nih.gov/nuccore">The NCBI Nucleotide Database</a> (which includes GenBank) has data for 432 million different sequences, and <a href="https://www.ncbi.nlm.nih.gov/snp/">dbSNP</a> describes 702 million different genetic variants. All of these records can be cross-referenced with the 1.86 million species in the <a href="https://www.ncbi.nlm.nih.gov/taxonomy">NCBI taxonomy</a> or 27 thousand disease-associated records in <a href="https://www.ncbi.nlm.nih.gov/omim">OMIM</a>.</p>
+<p>The NCBI makes this data available through a <a href="https://www.ncbi.nlm.nih.gov/">web interface</a>, an <a href="ftp://ftp.ncbi.nlm.nih.gov/">FTP server</a> and through a REST API called the <a href="https://www.ncbi.nlm.nih.gov/books/NBK25500/">Entrez Utilities</a> (<code>Eutils</code> for short). This package provides functions to use that API, allowing users to gather and combine data from multiple NCBI databases in the comfort of an R session or script.</p>
+</div>
+<div id="getting-started-with-the-rentrez" class="section level2">
 <h2>Getting started with the rentrez</h2>
-
-<p>To make the most of all the data the NCBI shares you need to know a little about
-their databases, the records they contain and the ways you can find those
-records. The <a href="http://www.ncbi.nlm.nih.gov/home/documentation.shtml">NCBI provides extensive documentation for each of their
-databases</a> and for the
-<a href="http://www.ncbi.nlm.nih.gov/books/NBK25501/">EUtils API that <code>rentrez</code> takes advantage of</a>.
-There are also some helper functions in <code>rentrez</code> that help users learn their
-way around the NCBI&#39;s databases. </p>
-
+<p>To make the most of all the data the NCBI shares you need to know a little about their databases, the records they contain and the ways you can find those records. The <a href="https://www.ncbi.nlm.nih.gov/home/documentation/">NCBI provides extensive documentation for each of their databases</a> and for the <a href="https://www.ncbi.nlm.nih.gov/books/NBK25501/">EUtils API that <code>rentrez</code> takes advantage of</a>. There are also some helper functions in <code>rentrez</code> that help users learn their way around the NCBI's databases.</p>
 <p>First, you can use <code>entrez_dbs()</code> to find the list of available databases:</p>
-
-<pre><code class="r">entrez_dbs()
-</code></pre>
-
-<pre><code>##  [1] &quot;pubmed&quot;          &quot;protein&quot;         &quot;nuccore&quot;        
-##  [4] &quot;ipg&quot;             &quot;nucleotide&quot;      &quot;nucgss&quot;         
-##  [7] &quot;nucest&quot;          &quot;structure&quot;       &quot;sparcle&quot;        
-## [10] &quot;genome&quot;          &quot;annotinfo&quot;       &quot;assembly&quot;       
-## [13] &quot;bioproject&quot;      &quot;biosample&quot;       &quot;blastdbinfo&quot;    
-## [16] &quot;books&quot;           &quot;cdd&quot;             &quot;clinvar&quot;        
-## [19] &quot;clone&quot;           &quot;gap&quot;             &quot;gapplus&quot;        
-## [22] &quot;grasp&quot;           &quot;dbvar&quot;           &quot;gene&quot;           
-## [25] &quot;gds&quot;             &quot;geoprofiles&quot;     &quot;homologene&quot;     
-## [28] &quot;medgen&quot;          &quot;mesh&quot;            &quot;ncbisearch&quot;     
-## [31] &quot;nlmcatalog&quot;      &quot;omim&quot;            &quot;orgtrack&quot;       
-## [34] &quot;pmc&quot;             &quot;popset&quot;          &quot;probe&quot;          
-## [37] &quot;proteinclusters&quot; &quot;pcassay&quot;         &quot;biosystems&quot;     
-## [40] &quot;pccompound&quot;      &quot;pcsubstance&quot;     &quot;seqannot&quot;       
-## [43] &quot;snp&quot;             &quot;sra&quot;             &quot;taxonomy&quot;       
-## [46] &quot;biocollections&quot;  &quot;unigene&quot;         &quot;gencoll&quot;        
-## [49] &quot;gtr&quot;
-</code></pre>
-
-<p>There is a set of functions with names starting <code>entrez_db_</code> that can be used to
-gather more information about each of these databases:</p>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_dbs</span>()</code></pre></div>
+<pre><code>##  [1] &quot;pubmed&quot;          &quot;protein&quot;         &quot;nuccore&quot;         &quot;ipg&quot;            
+##  [5] &quot;nucleotide&quot;      &quot;structure&quot;       &quot;sparcle&quot;         &quot;protfam&quot;        
+##  [9] &quot;genome&quot;          &quot;annotinfo&quot;       &quot;assembly&quot;        &quot;bioproject&quot;     
+## [13] &quot;biosample&quot;       &quot;blastdbinfo&quot;     &quot;books&quot;           &quot;cdd&quot;            
+## [17] &quot;clinvar&quot;         &quot;gap&quot;             &quot;gapplus&quot;         &quot;grasp&quot;          
+## [21] &quot;dbvar&quot;           &quot;gene&quot;            &quot;gds&quot;             &quot;geoprofiles&quot;    
+## [25] &quot;homologene&quot;      &quot;medgen&quot;          &quot;mesh&quot;            &quot;ncbisearch&quot;     
+## [29] &quot;nlmcatalog&quot;      &quot;omim&quot;            &quot;orgtrack&quot;        &quot;pmc&quot;            
+## [33] &quot;popset&quot;          &quot;proteinclusters&quot; &quot;pcassay&quot;         &quot;biosystems&quot;     
+## [37] &quot;pccompound&quot;      &quot;pcsubstance&quot;     &quot;seqannot&quot;        &quot;snp&quot;            
+## [41] &quot;sra&quot;             &quot;taxonomy&quot;        &quot;biocollections&quot;  &quot;gtr&quot;</code></pre>
+<p>There is a set of functions with names starting <code>entrez_db_</code> that can be used to gather more information about each of these databases:</p>
 <p><strong>Functions that help you learn about NCBI databases</strong></p>
-
-<table><thead>
-<tr>
+<table>
+<colgroup>
+<col width="32%"></col>
+<col width="67%"></col>
+</colgroup>
+<thead>
+<tr class="header">
 <th>Function name</th>
 <th>Return</th>
 </tr>
-</thead><tbody>
-<tr>
+</thead>
+<tbody>
+<tr class="odd">
 <td><code>entrez_db_summary()</code></td>
 <td>Brief description of what the database is</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>entrez_db_searchable()</code></td>
 <td>Set of search terms that can used with this database</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>entrez_db_links()</code></td>
 <td>Set of databases that might contain linked records</td>
 </tr>
-</tbody></table>
-
-<p>For instance, we can get a description of the somewhat cryptically named
-database &#39;cdd&#39;&hellip;</p>
-
-<pre><code class="r">entrez_db_summary(&quot;cdd&quot;)
-</code></pre>
-
+</tbody>
+</table>
+<p>For instance, we can get a description of the somewhat cryptically named database 'cdd'...</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_db_summary</span>(<span class="st">&quot;cdd&quot;</span>)</code></pre></div>
 <pre><code>##  DbName: cdd
 ##  MenuName: Conserved Domains
 ##  Description: Conserved Domain Database
-##  DbBuild: Build190405-1636.1
-##  Count: 57242
-##  LastUpdate: 2019/04/05 20:21
-</code></pre>
-
-<p>&hellip; or find out which search terms can be used with the Sequence Read Archive (SRA)
-database (which contains raw data from sequencing projects):</p>
-
-<pre><code class="r">entrez_db_searchable(&quot;sra&quot;)
-</code></pre>
-
-<pre><code>## Searchable fields for database &#39;sra&#39;
+##  DbBuild: Build200915-1834.1
+##  Count: 59951
+##  LastUpdate: 2020/09/15 23:43</code></pre>
+<p>... or find out which search terms can be used with the Sequence Read Archive (SRA) database (which contains raw data from sequencing projects):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_db_searchable</span>(<span class="st">&quot;sra&quot;</span>)</code></pre></div>
+<pre><code>## Searchable fields for database 'sra'
 ##   ALL     All terms from all searchable fields 
 ##   UID     Unique number assigned to publication 
 ##   FILT    Limits the records 
@@ -321,119 +226,54 @@ database (which contains raw data from sequencing projects):</p>
 ##   RLEN    Percent of aligned reads 
 ##   ACS     Access is public or controlled 
 ##   ALN     Percent of aligned reads 
-##   MBS     Size in megabases
-</code></pre>
-
-<p>Just how these &#39;helper&#39; functions might be useful will become clearer once
-you&#39;ve started using <code>rentrez</code>, so let&#39;s get started.</p>
-
+##   MBS     Size in megabases</code></pre>
+<p>Just how these 'helper' functions might be useful will become clearer once you've started using <code>rentrez</code>, so let's get started.</p>
+</div>
+<div id="searching-databases-entrez_search" class="section level2">
 <h2>Searching databases: <code>entrez_search()</code></h2>
-
-<p>Very often, the first thing you&#39;ll want to do with <code>rentrez</code> is search a given
-NCBI database to find records that match some keywords. You can do this using
-the function <code>entrez_search()</code>. In the simplest case you just need to provide a 
-database name (<code>db</code>) and a search term (<code>term</code>) so let&#39;s search PubMed for
-articles about the <code>R language</code>:</p>
-
-<pre><code class="r">r_search &lt;- entrez_search(db=&quot;pubmed&quot;, term=&quot;R Language&quot;)
-</code></pre>
-
-<p>The object returned by a search acts like a list, and you can get a summary of 
-its contents by printing it.</p>
-
-<pre><code class="r">r_search
-</code></pre>
-
-<pre><code>## Entrez search result with 11990 hits (object contains 20 IDs and no web_history object)
-##  Search term (as translated):  R[All Fields] AND (&quot;programming languages&quot;[MeSH Te ...
-</code></pre>
-
-<p>There are a few things to note here. First, the NCBI&#39;s server has worked out
-that we meant R as a programming language, and so included the
-<a href="http://www.ncbi.nlm.nih.gov/mesh">&#39;MeSH&#39; term</a> term associated with programming
-languages. We&#39;ll worry about MeSH terms and other special queries later, for now
-just note that you can use this feature to check that your search term was interpreted in the way
-you intended. Second, there are many more &#39;hits&#39; for this search than there
-are unique IDs contained in this object. That&#39;s because the optional argument
-<code>retmax</code>, which controls the maximum number of returned values has a default
-value of 20.</p>
-
-<p>The IDs are the most important thing returned here. They
-allow us to fetch records matching those IDs, gather summary data about them or find
-cross-referenced records in other databases. We access the IDs as a vector using the
-<code>$</code> operator:</p>
-
-<pre><code class="r">r_search$ids
-</code></pre>
-
-<pre><code>##  [1] &quot;31038840&quot; &quot;31038735&quot; &quot;31038330&quot; &quot;31035919&quot; &quot;31035177&quot; &quot;31034698&quot;
-##  [7] &quot;31032035&quot; &quot;31032001&quot; &quot;31026661&quot; &quot;31024385&quot; &quot;31019992&quot; &quot;31019986&quot;
-## [13] &quot;31018505&quot; &quot;31016215&quot; &quot;31014126&quot; &quot;31014101&quot; &quot;31011201&quot; &quot;31007436&quot;
-## [19] &quot;31006364&quot; &quot;30999311&quot;
-</code></pre>
-
+<p>Very often, the first thing you'll want to do with <code>rentrez</code> is search a given NCBI database to find records that match some keywords. You can do this using the function <code>entrez_search()</code>. In the simplest case you just need to provide a database name (<code>db</code>) and a search term (<code>term</code>) so let's search PubMed for articles about the <code>R language</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r_search &lt;-<span class="st"> </span><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;pubmed&quot;</span>, <span class="dt">term=</span><span class="st">&quot;R Language&quot;</span>)</code></pre></div>
+<p>The object returned by a search acts like a list, and you can get a summary of its contents by printing it.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r_search</code></pre></div>
+<pre><code>## Entrez search result with 13887 hits (object contains 20 IDs and no web_history object)
+##  Search term (as translated):  R[All Fields] AND (&quot;programming languages&quot;[MeSH Te ...</code></pre>
+<p>There are a few things to note here. First, the NCBI's server has worked out that we meant R as a programming language, and so included the <a href="https://www.ncbi.nlm.nih.gov/mesh">'MeSH' term</a> term associated with programming languages. We'll worry about MeSH terms and other special queries later, for now just note that you can use this feature to check that your search term was interpreted in the way you intended. Second, there are many more 'hits' for this search than there are unique IDs contained in this object. That's because the optional argument <code>retmax</code>, which controls the maximum number of returned values has a default value of 20.</p>
+<p>The IDs are the most important thing returned here. They allow us to fetch records matching those IDs, gather summary data about them or find cross-referenced records in other databases. We access the IDs as a vector using the <code>$</code> operator:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r_search<span class="op">$</span>ids</code></pre></div>
+<pre><code>##  [1] &quot;33162761&quot; &quot;33159508&quot; &quot;33159265&quot; &quot;33157941&quot; &quot;33156672&quot; &quot;33152986&quot;
+##  [7] &quot;33151654&quot; &quot;33149734&quot; &quot;33148210&quot; &quot;33146627&quot; &quot;33144470&quot; &quot;33140307&quot;
+## [13] &quot;33138840&quot; &quot;33137091&quot; &quot;33134808&quot; &quot;33132805&quot; &quot;33130251&quot; &quot;33129117&quot;
+## [19] &quot;33126397&quot; &quot;33124328&quot;</code></pre>
 <p>If we want to get more than 20 IDs we can do so by increasing the <code>ret_max</code> argument.</p>
-
-<pre><code class="r">another_r_search &lt;- entrez_search(db=&quot;pubmed&quot;, term=&quot;R Language&quot;, retmax=40)
-another_r_search
-</code></pre>
-
-<pre><code>## Entrez search result with 11990 hits (object contains 40 IDs and no web_history object)
-##  Search term (as translated):  R[All Fields] AND (&quot;programming languages&quot;[MeSH Te ...
-</code></pre>
-
-<p>If we want to get IDs for all of the thousands of records that match this
-search, we can use the NCBI&#39;s web history feature <a href="#web_history">described below</a>.</p>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">another_r_search &lt;-<span class="st"> </span><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;pubmed&quot;</span>, <span class="dt">term=</span><span class="st">&quot;R Language&quot;</span>, <span class="dt">retmax=</span><span class="dv">40</span>)
+another_r_search</code></pre></div>
+<pre><code>## Entrez search result with 13887 hits (object contains 40 IDs and no web_history object)
+##  Search term (as translated):  R[All Fields] AND (&quot;programming languages&quot;[MeSH Te ...</code></pre>
+<p>If we want to get IDs for all of the thousands of records that match this search, we can use the NCBI's web history feature <a href="#web_history">described below</a>.</p>
+<div id="building-search-terms" class="section level3">
 <h3>Building search terms</h3>
-
-<p>The EUtils API uses a special syntax to build search terms. You can search a
-database against a specific term using the format <code>query[SEARCH FIELD]</code>, and
-combine multiple such searches using the boolean operators <code>AND</code>, <code>OR</code> and <code>NOT</code>.</p>
-
-<p>For instance, we can find next generation sequence datasets for the (amazing&hellip;) ciliate
-<em>Tetrahymena thermophila</em> by using the organism (&#39;ORGN&#39;) search field:</p>
-
-<pre><code class="r">entrez_search(db=&quot;sra&quot;,
-              term=&quot;Tetrahymena thermophila[ORGN]&quot;,
-              retmax=0)
-</code></pre>
-
-<pre><code>## Entrez search result with 421 hits (object contains 0 IDs and no web_history object)
-##  Search term (as translated):  &quot;Tetrahymena thermophila&quot;[Organism]
-</code></pre>
-
-<p>We can narrow our focus to only those records that have been added recently (using the colon to 
-specify a range of values):</p>
-
-<pre><code class="r">entrez_search(db=&quot;sra&quot;,
-              term=&quot;Tetrahymena thermophila[ORGN] AND 2013:2015[PDAT]&quot;,
-              retmax=0)
-</code></pre>
-
+<p>The EUtils API uses a special syntax to build search terms. You can search a database against a specific term using the format <code>query[SEARCH FIELD]</code>, and combine multiple such searches using the boolean operators <code>AND</code>, <code>OR</code> and <code>NOT</code>.</p>
+<p>For instance, we can find next generation sequence datasets for the (amazing...) ciliate <em>Tetrahymena thermophila</em> by using the organism ('ORGN') search field:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;sra&quot;</span>,
+              <span class="dt">term=</span><span class="st">&quot;Tetrahymena thermophila[ORGN]&quot;</span>,
+              <span class="dt">retmax=</span><span class="dv">0</span>)</code></pre></div>
+<pre><code>## Entrez search result with 896 hits (object contains 0 IDs and no web_history object)
+##  Search term (as translated):  &quot;Tetrahymena thermophila&quot;[Organism]</code></pre>
+<p>We can narrow our focus to only those records that have been added recently (using the colon to specify a range of values):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;sra&quot;</span>,
+              <span class="dt">term=</span><span class="st">&quot;Tetrahymena thermophila[ORGN] AND 2013:2015[PDAT]&quot;</span>,
+              <span class="dt">retmax=</span><span class="dv">0</span>)</code></pre></div>
 <pre><code>## Entrez search result with 75 hits (object contains 0 IDs and no web_history object)
-##  Search term (as translated):  &quot;Tetrahymena thermophila&quot;[Organism] AND 2013[PDAT] ...
-</code></pre>
-
-<p>Or include recent records for either <em>T. thermophila</em> or it&#39;s close relative <em>T.
-borealis</em> (using parentheses to make ANDs and ORs explicit).</p>
-
-<pre><code class="r">entrez_search(db=&quot;sra&quot;,
-              term=&quot;(Tetrahymena thermophila[ORGN] OR Tetrahymena borealis[ORGN]) AND 2013:2015[PDAT]&quot;,
-              retmax=0)
-</code></pre>
-
+##  Search term (as translated):  &quot;Tetrahymena thermophila&quot;[Organism] AND 2013[PDAT] ...</code></pre>
+<p>Or include recent records for either <em>T. thermophila</em> or it's close relative <em>T. borealis</em> (using parentheses to make ANDs and ORs explicit).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;sra&quot;</span>,
+              <span class="dt">term=</span><span class="st">&quot;(Tetrahymena thermophila[ORGN] OR Tetrahymena borealis[ORGN]) AND 2013:2015[PDAT]&quot;</span>,
+              <span class="dt">retmax=</span><span class="dv">0</span>)</code></pre></div>
 <pre><code>## Entrez search result with 75 hits (object contains 0 IDs and no web_history object)
-##  Search term (as translated):  (&quot;Tetrahymena thermophila&quot;[Organism] OR &quot;Tetrahyme ...
-</code></pre>
-
-<p>The set of search terms available varies between databases. You can get a list
-of available terms or any given data base with <code>entrez_db_searchable()</code></p>
-
-<pre><code class="r">entrez_db_searchable(&quot;sra&quot;)
-</code></pre>
-
-<pre><code>## Searchable fields for database &#39;sra&#39;
+##  Search term (as translated):  (&quot;Tetrahymena thermophila&quot;[Organism] OR &quot;Tetrahyme ...</code></pre>
+<p>The set of search terms available varies between databases. You can get a list of available terms or any given data base with <code>entrez_db_searchable()</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_db_searchable</span>(<span class="st">&quot;sra&quot;</span>)</code></pre></div>
+<pre><code>## Searchable fields for database 'sra'
 ##   ALL     All terms from all searchable fields 
 ##   UID     Unique number assigned to publication 
 ##   FILT    Limits the records 
@@ -455,245 +295,147 @@ of available terms or any given data base with <code>entrez_db_searchable()</cod
 ##   RLEN    Percent of aligned reads 
 ##   ACS     Access is public or controlled 
 ##   ALN     Percent of aligned reads 
-##   MBS     Size in megabases
-</code></pre>
-
+##   MBS     Size in megabases</code></pre>
+</div>
+<div id="using-the-filter-field" class="section level3">
 <h3>Using the Filter field</h3>
-
-<p>&ldquo;Filter&rdquo; is a special field that, as the names suggests, allows you to limit 
-records returned by a search to set of filtering criteria. There is no programmatic 
-way to find the particular terms that can be used with the Filter field. 
-However, the NCBI&#39;s website provides an &ldquo;advanced search&rdquo; tool for some 
-databases that can be used to discover these terms. </p>
-
-<p>For example, to find the list of possible to find all of the terms that can be
-used to filter searches to the nucleotide database using the 
-<a href="https://www.ncbi.nlm.nih.gov/nuccore/advanced">advanced search for that databse</a>.
-On that page selecting &ldquo;Filter&rdquo; from the first drop-down box then clicking 
-&ldquo;Show index list&rdquo; will allow the user to scroll through possible filtering
-terms.</p>
-
-<p>###Precise queries using MeSH terms</p>
-
-<p>In addition to the search terms described above, the NCBI allows searches using
-<a href="http://www.ncbi.nlm.nih.gov/mesh">Medical Subject Heading (MeSH)</a> terms. These
-terms create a &#39;controlled vocabulary&#39;,  and allow users to make very finely
-controlled queries of databases.</p>
-
-<p>For instance, if you were interested in reviewing studies on how a class of
-anti-malarial drugs called Folic Acid Antagonists work against <em>Plasmodium vivax</em> (a
-particular species of malarial parasite), you could use this search:</p>
-
-<pre><code class="r">entrez_search(db   = &quot;pubmed&quot;,
-              term = &quot;(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])&quot;)
-</code></pre>
-
-<pre><code>## Entrez search result with 14 hits (object contains 14 IDs and no web_history object)
-##  Search term (as translated):  &quot;malaria, vivax&quot;[MeSH Terms] AND &quot;folic acid antag ...
-</code></pre>
-
-<p>The complete set of MeSH terms is available as a database from the NCBI. That
-means it is possible to download detailed information about each term and find 
-the ways in which terms relate to each other using <code>rentrez</code>. You can search 
-for specific terms with <code>entrez_search(db=&quot;mesh&quot;, term =...)</code> and learn about the
-results of your search using the tools described below.</p>
-
+<p>&quot;Filter&quot; is a special field that, as the names suggests, allows you to limit records returned by a search to set of filtering criteria. There is no programmatic way to find the particular terms that can be used with the Filter field. However, the NCBI's website provides an &quot;advanced search&quot; tool for some databases that can be used to discover these terms.</p>
+<p>For example, to find the list of possible to find all of the terms that can be used to filter searches to the nucleotide database using the <a href="https://www.ncbi.nlm.nih.gov/nuccore/advanced">advanced search for that databse</a>. On that page selecting &quot;Filter&quot; from the first drop-down box then clicking &quot;Show index list&quot; will allow the user to scroll through possible filtering terms.</p>
+</div>
+<div id="precise-queries-using-mesh-terms" class="section level3">
+<h3>Precise queries using MeSH terms</h3>
+<p>In addition to the search terms described above, the NCBI allows searches using <a href="https://www.ncbi.nlm.nih.gov/mesh">Medical Subject Heading (MeSH)</a> terms. These terms create a 'controlled vocabulary', and allow users to make very finely controlled queries of databases.</p>
+<p>For instance, if you were interested in reviewing studies on how a class of anti-malarial drugs called Folic Acid Antagonists work against <em>Plasmodium vivax</em> (a particular species of malarial parasite), you could use this search:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_search</span>(<span class="dt">db   =</span> <span class="st">&quot;pubmed&quot;</span>,
+              <span class="dt">term =</span> <span class="st">&quot;(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])&quot;</span>)</code></pre></div>
+<pre><code>## Entrez search result with 16 hits (object contains 16 IDs and no web_history object)
+##  Search term (as translated):  &quot;malaria, vivax&quot;[MeSH Terms] AND &quot;folic acid antag ...</code></pre>
+<p>The complete set of MeSH terms is available as a database from the NCBI. That means it is possible to download detailed information about each term and find the ways in which terms relate to each other using <code>rentrez</code>. You can search for specific terms with <code>entrez_search(db=&quot;mesh&quot;, term =...)</code> and learn about the results of your search using the tools described below.</p>
+</div>
+<div id="advanced-counting" class="section level3">
 <h3>Advanced counting</h3>
-
-<p>As you can see above, the  object returned by <code>entrez_search()</code> includes the
-number of records matching a given search. This means you can learn a little
-about the composition of, or trends in, the records stored in the NCBI&#39;s
-databases using only the search utility. For instance, let&#39;s track the rise of
-the scientific buzzword &ldquo;connectome&rdquo; in PubMed, programmatically creating 
-search terms for the <code>PDAT</code> field:</p>
-
-<pre><code class="r">search_year &lt;- function(year, term){
-    query &lt;- paste(term, &quot;AND (&quot;, year, &quot;[PDAT])&quot;)
-    entrez_search(db=&quot;pubmed&quot;, term=query, retmax=0)$count
+<p>As you can see above, the object returned by <code>entrez_search()</code> includes the number of records matching a given search. This means you can learn a little about the composition of, or trends in, the records stored in the NCBI's databases using only the search utility. For instance, let's track the rise of the scientific buzzword &quot;connectome&quot; in PubMed, programmatically creating search terms for the <code>PDAT</code> field:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">search_year &lt;-<span class="st"> </span><span class="cf">function</span>(year, term){
+    query &lt;-<span class="st"> </span><span class="kw">paste</span>(term, <span class="st">&quot;AND (&quot;</span>, year, <span class="st">&quot;[PDAT])&quot;</span>)
+    <span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;pubmed&quot;</span>, <span class="dt">term=</span>query, <span class="dt">retmax=</span><span class="dv">0</span>)<span class="op">$</span>count
 }
 
-year &lt;- 2008:2014
-papers &lt;- sapply(year, search_year, term=&quot;Connectome&quot;, USE.NAMES=FALSE)
+year &lt;-<span class="st"> </span><span class="dv">2008</span><span class="op">:</span><span class="dv">2014</span>
+papers &lt;-<span class="st"> </span><span class="kw">sapply</span>(year, search_year, <span class="dt">term=</span><span class="st">&quot;Connectome&quot;</span>, <span class="dt">USE.NAMES=</span><span class="ot">FALSE</span>)
 
-plot(year, papers, type=&#39;b&#39;, main=&quot;The Rise of the Connectome&quot;)
-</code></pre>
-
-<p><img src="data:image/png;base64,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" title="plot of chunk connectome" alt="plot of chunk connectome" style="display: block; margin: auto;" /></p>
-
+<span class="kw">plot</span>(year, papers, <span class="dt">type=</span><span class="st">'b'</span>, <span class="dt">main=</span><span class="st">&quot;The Rise of the Connectome&quot;</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="finding-cross-references-entrez_link" class="section level2">
 <h2>Finding cross-references : <code>entrez_link()</code>:</h2>
-
-<p>One of the strengths of the NCBI databases is the degree to which records of one
-type are connected to  other records within the NCBI or to external data
-sources. The function <code>entrez_link()</code> allows users to discover these links
-between records.</p>
-
-<p>###My god, it&#39;s full of links</p>
-
-<p>To get an idea of the degree to which records in the NCBI are cross-linked we
-can find all NCBI data associated with a single gene (in this case the 
-Amyloid Beta Precursor gene, the product of which is associated with the 
-plaques that form in the brains of  Alzheimer&#39;s Disease patients).</p>
-
-<p>The function <code>entrez_link()</code> can be used to find cross-referenced records. In
-the most basic case we need to provide an ID (<code>id</code>), the database from which this
-ID comes (<code>dbfrom</code>) and the name of a database in which to find linked records (<code>db</code>).
-If we set this last argument to &#39;all&#39; we can find links in multiple databases:</p>
-
-<pre><code class="r">all_the_links &lt;- entrez_link(dbfrom=&#39;gene&#39;, id=351, db=&#39;all&#39;)
-all_the_links
-</code></pre>
-
+<p>One of the strengths of the NCBI databases is the degree to which records of one type are connected to other records within the NCBI or to external data sources. The function <code>entrez_link()</code> allows users to discover these links between records.</p>
+<div id="my-god-its-full-of-links" class="section level3">
+<h3>My god, it's full of links</h3>
+<p>To get an idea of the degree to which records in the NCBI are cross-linked we can find all NCBI data associated with a single gene (in this case the Amyloid Beta Precursor gene, the product of which is associated with the plaques that form in the brains of Alzheimer's Disease patients).</p>
+<p>The function <code>entrez_link()</code> can be used to find cross-referenced records. In the most basic case we need to provide an ID (<code>id</code>), the database from which this ID comes (<code>dbfrom</code>) and the name of a database in which to find linked records (<code>db</code>). If we set this last argument to 'all' we can find links in multiple databases:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_the_links &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">'gene'</span>, <span class="dt">id=</span><span class="dv">351</span>, <span class="dt">db=</span><span class="st">'all'</span>)
+all_the_links</code></pre></div>
 <pre><code>## elink object with contents:
 ##  $links: IDs for linked records from NCBI
-## 
-</code></pre>
-
-<p>Just as with <code>entrez_search</code> the returned object behaves like a list, and we can
-learn a little about its contents by printing it. In the case, all of the
-information is in <code>links</code> (and there&#39;s a lot of them!):</p>
-
-<pre><code class="r">all_the_links$links
-</code></pre>
-
-<pre><code>## elink result with information from 56 databases:
+## </code></pre>
+<p>Just as with <code>entrez_search</code> the returned object behaves like a list, and we can learn a little about its contents by printing it. In the case, all of the information is in <code>links</code> (and there's a lot of them!):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_the_links<span class="op">$</span>links</code></pre></div>
+<pre><code>## elink result with information from 57 databases:
 ##  [1] gene_bioconcepts               gene_biosystems               
 ##  [3] gene_biosystems_all            gene_clinvar                  
 ##  [5] gene_clinvar_specific          gene_dbvar                    
 ##  [7] gene_genome                    gene_gtr                      
 ##  [9] gene_homologene                gene_medgen_diseases          
 ## [11] gene_pcassay_alltarget_list    gene_pcassay_alltarget_summary
-## [13] gene_pcassay_rnai              gene_pcassay_target           
-## [15] gene_probe                     gene_snp                      
-## [17] gene_structure                 gene_bioproject               
-## [19] gene_cdd                       gene_gene_h3k4me3             
-## [21] gene_gene_neighbors            gene_genereviews              
-## [23] gene_genome2                   gene_geoprofiles              
-## [25] gene_nuccore                   gene_nuccore_mgc              
-## [27] gene_nuccore_pos               gene_nuccore_refseqgene       
-## [29] gene_nuccore_refseqrna         gene_nucest_clust             
-## [31] gene_nucleotide                gene_nucleotide_clust         
-## [33] gene_nucleotide_mgc            gene_nucleotide_mgc_url       
-## [35] gene_nucleotide_pos            gene_omim                     
-## [37] gene_pcassay_proteintarget     gene_pccompound               
-## [39] gene_pcsubstance               gene_pmc                      
-## [41] gene_pmc_nucleotide            gene_protein                  
-## [43] gene_protein_refseq            gene_pubmed                   
-## [45] gene_pubmed_all                gene_pubmed_citedinomim       
-## [47] gene_pubmed_highlycited        gene_pubmed_latest            
-## [49] gene_pubmed_pmc_nucleotide     gene_pubmed_reviews           
-## [51] gene_pubmed_rif                gene_snp_geneview             
-## [53] gene_sparcle                   gene_taxonomy                 
-## [55] gene_unigene                   gene_varview
-</code></pre>
-
-<p>The names of the list elements are in the format <code>[source_database]_[linked_database]</code> 
-and the elements themselves contain a vector of linked-IDs. So, if we want to
-find open access publications associated with this gene we could get linked records
-in PubMed Central:</p>
-
-<pre><code class="r">all_the_links$links$gene_pmc[1:10]
-</code></pre>
-
-<pre><code>##  [1] &quot;6275581&quot; &quot;6145937&quot; &quot;6114740&quot; &quot;6080689&quot; &quot;6042101&quot; &quot;5924922&quot; &quot;5875988&quot;
-##  [8] &quot;5796664&quot; &quot;5761312&quot; &quot;5719975&quot;
-</code></pre>
-
-<p>Or if were interested in this gene&#39;s role in diseases we could find links to clinVar:</p>
-
-<pre><code class="r">all_the_links$links$gene_clinvar
-</code></pre>
-
-<pre><code>##   [1] &quot;604878&quot; &quot;604877&quot; &quot;604783&quot; &quot;604782&quot; &quot;604779&quot; &quot;604777&quot; &quot;585434&quot;
-##   [8] &quot;585433&quot; &quot;585432&quot; &quot;585431&quot; &quot;585430&quot; &quot;585429&quot; &quot;585428&quot; &quot;585427&quot;
-##  [15] &quot;564661&quot; &quot;546904&quot; &quot;524210&quot; &quot;524209&quot; &quot;524208&quot; &quot;521455&quot; &quot;453313&quot;
-##  [22] &quot;450260&quot; &quot;446856&quot; &quot;446855&quot; &quot;446854&quot; &quot;443979&quot; &quot;442418&quot; &quot;397432&quot;
-##  [29] &quot;396808&quot; &quot;396332&quot; &quot;396150&quot; &quot;394309&quot; &quot;391496&quot; &quot;369359&quot; &quot;339659&quot;
-##  [36] &quot;339658&quot; &quot;339657&quot; &quot;339656&quot; &quot;339655&quot; &quot;339654&quot; &quot;339653&quot; &quot;339652&quot;
-##  [43] &quot;339651&quot; &quot;339650&quot; &quot;339649&quot; &quot;339648&quot; &quot;339647&quot; &quot;339646&quot; &quot;339645&quot;
-##  [50] &quot;339644&quot; &quot;339643&quot; &quot;339642&quot; &quot;339641&quot; &quot;339640&quot; &quot;339639&quot; &quot;339638&quot;
-##  [57] &quot;339637&quot; &quot;339636&quot; &quot;339635&quot; &quot;339634&quot; &quot;339633&quot; &quot;339632&quot; &quot;339631&quot;
-##  [64] &quot;339630&quot; &quot;339629&quot; &quot;339628&quot; &quot;339627&quot; &quot;339626&quot; &quot;339625&quot; &quot;339624&quot;
-##  [71] &quot;339623&quot; &quot;339622&quot; &quot;339621&quot; &quot;339620&quot; &quot;339619&quot; &quot;253512&quot; &quot;253403&quot;
-##  [78] &quot;236549&quot; &quot;236548&quot; &quot;236547&quot; &quot;221889&quot; &quot;160886&quot; &quot;155682&quot; &quot;155309&quot;
-##  [85] &quot;155093&quot; &quot;155053&quot; &quot;154360&quot; &quot;154063&quot; &quot;153438&quot; &quot;152839&quot; &quot;151388&quot;
-##  [92] &quot;150018&quot; &quot;149551&quot; &quot;149418&quot; &quot;149160&quot; &quot;149035&quot; &quot;148411&quot; &quot;148262&quot;
-##  [99] &quot;148180&quot; &quot;146125&quot; &quot;145984&quot; &quot;145474&quot; &quot;145468&quot; &quot;145332&quot; &quot;145107&quot;
-## [106] &quot;144677&quot; &quot;144194&quot; &quot;127268&quot; &quot;98242&quot;  &quot;98241&quot;  &quot;98240&quot;  &quot;98239&quot; 
-## [113] &quot;98238&quot;  &quot;98237&quot;  &quot;98236&quot;  &quot;98235&quot;  &quot;59247&quot;  &quot;59246&quot;  &quot;59245&quot; 
-## [120] &quot;59243&quot;  &quot;59226&quot;  &quot;59224&quot;  &quot;59223&quot;  &quot;59222&quot;  &quot;59221&quot;  &quot;59010&quot; 
-## [127] &quot;59005&quot;  &quot;59004&quot;  &quot;37145&quot;  &quot;32099&quot;  &quot;18106&quot;  &quot;18105&quot;  &quot;18104&quot; 
-## [134] &quot;18103&quot;  &quot;18102&quot;  &quot;18101&quot;  &quot;18100&quot;  &quot;18099&quot;  &quot;18098&quot;  &quot;18097&quot; 
-## [141] &quot;18096&quot;  &quot;18095&quot;  &quot;18094&quot;  &quot;18093&quot;  &quot;18091&quot;  &quot;18090&quot;  &quot;18089&quot; 
-## [148] &quot;18088&quot;  &quot;18087&quot;
-</code></pre>
-
-<p>###Narrowing our focus</p>
-
-<p>If we know beforehand what sort of links we&#39;d like to find , we can
-to use the <code>db</code> argument to narrow the focus of a call to <code>entrez_link</code>.</p>
-
-<p>For instance, say we are interested in knowing about all of the 
-RNA transcripts associated with the Amyloid Beta Precursor gene in humans. 
-Transcript sequences are stored in the nucleotide database (referred
-to as <code>nuccore</code> in EUtils), so to find transcripts associated with a given gene
-we need to set <code>dbfrom=gene</code> and <code>db=nuccore</code>.</p>
-
-<pre><code class="r">nuc_links &lt;- entrez_link(dbfrom=&#39;gene&#39;, id=351, db=&#39;nuccore&#39;)
-nuc_links
-</code></pre>
-
+## [13] gene_pcassay_rnai              gene_pcassay_rnai_active      
+## [15] gene_pcassay_target            gene_probe                    
+## [17] gene_snp                       gene_structure                
+## [19] gene_bioproject                gene_cdd                      
+## [21] gene_gene_h3k4me3              gene_gene_neighbors           
+## [23] gene_genereviews               gene_genome2                  
+## [25] gene_geoprofiles               gene_nuccore                  
+## [27] gene_nuccore_mgc               gene_nuccore_pos              
+## [29] gene_nuccore_refseqgene        gene_nuccore_refseqrna        
+## [31] gene_nucest_clust              gene_nucleotide               
+## [33] gene_nucleotide_clust          gene_nucleotide_mgc           
+## [35] gene_nucleotide_mgc_url        gene_nucleotide_pos           
+## [37] gene_omim                      gene_pcassay_proteintarget    
+## [39] gene_pccompound                gene_pcsubstance              
+## [41] gene_pmc                       gene_pmc_nucleotide           
+## [43] gene_protein                   gene_protein_refseq           
+## [45] gene_pubmed                    gene_pubmed_all               
+## [47] gene_pubmed_citedinomim        gene_pubmed_highlycited       
+## [49] gene_pubmed_latest             gene_pubmed_pmc_nucleotide    
+## [51] gene_pubmed_reviews            gene_pubmed_rif               
+## [53] gene_snp_geneview              gene_sparcle                  
+## [55] gene_taxonomy                  gene_unigene                  
+## [57] gene_varview</code></pre>
+<p>The names of the list elements are in the format <code>[source_database]_[linked_database]</code> and the elements themselves contain a vector of linked-IDs. So, if we want to find open access publications associated with this gene we could get linked records in PubMed Central:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_the_links<span class="op">$</span>links<span class="op">$</span>gene_pmc[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</code></pre></div>
+<pre><code>##  [1] &quot;7490758&quot; &quot;7296003&quot; &quot;7291702&quot; &quot;6991300&quot; &quot;6889931&quot; &quot;6796269&quot; &quot;6778137&quot;
+##  [8] &quot;6769662&quot; &quot;6745714&quot; &quot;6729714&quot;</code></pre>
+<p>Or if were interested in this gene's role in diseases we could find links to clinVar:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_the_links<span class="op">$</span>links<span class="op">$</span>gene_clinvar</code></pre></div>
+<pre><code>##   [1] &quot;983157&quot; &quot;980228&quot; &quot;967074&quot; &quot;963922&quot; &quot;932452&quot; &quot;899123&quot; &quot;899061&quot; &quot;899060&quot;
+##   [9] &quot;898004&quot; &quot;898003&quot; &quot;898002&quot; &quot;898001&quot; &quot;898000&quot; &quot;897923&quot; &quot;897922&quot; &quot;897921&quot;
+##  [17] &quot;897920&quot; &quot;896374&quot; &quot;896373&quot; &quot;896311&quot; &quot;896310&quot; &quot;896309&quot; &quot;896308&quot; &quot;896307&quot;
+##  [25] &quot;896306&quot; &quot;896305&quot; &quot;894990&quot; &quot;894989&quot; &quot;894932&quot; &quot;894931&quot; &quot;894930&quot; &quot;894929&quot;
+##  [33] &quot;894858&quot; &quot;894857&quot; &quot;894856&quot; &quot;872801&quot; &quot;870542&quot; &quot;851473&quot; &quot;836798&quot; &quot;816143&quot;
+##  [41] &quot;809279&quot; &quot;798148&quot; &quot;789927&quot; &quot;784763&quot; &quot;772956&quot; &quot;772393&quot; &quot;771988&quot; &quot;755687&quot;
+##  [49] &quot;754549&quot; &quot;752834&quot; &quot;746190&quot; &quot;745507&quot; &quot;742020&quot; &quot;740728&quot; &quot;729651&quot; &quot;723763&quot;
+##  [57] &quot;721913&quot; &quot;717600&quot; &quot;710556&quot; &quot;706432&quot; &quot;706273&quot; &quot;705909&quot; &quot;705875&quot; &quot;705044&quot;
+##  [65] &quot;704999&quot; &quot;704993&quot; &quot;704956&quot; &quot;704545&quot; &quot;704297&quot; &quot;704136&quot; &quot;703233&quot; &quot;687518&quot;
+##  [73] &quot;686229&quot; &quot;664060&quot; &quot;662051&quot; &quot;657080&quot; &quot;653874&quot; &quot;649787&quot; &quot;645976&quot; &quot;644611&quot;
+##  [81] &quot;640843&quot; &quot;638317&quot; &quot;635905&quot; &quot;604878&quot; &quot;604877&quot; &quot;604783&quot; &quot;604782&quot; &quot;604779&quot;
+##  [89] &quot;604777&quot; &quot;585434&quot; &quot;585433&quot; &quot;585432&quot; &quot;585431&quot; &quot;585430&quot; &quot;585429&quot; &quot;585428&quot;
+##  [97] &quot;585427&quot; &quot;564661&quot; &quot;546904&quot; &quot;524210&quot; &quot;524209&quot; &quot;524208&quot; &quot;521455&quot; &quot;453313&quot;
+## [105] &quot;450260&quot; &quot;446856&quot; &quot;446855&quot; &quot;446854&quot; &quot;443979&quot; &quot;442418&quot; &quot;397432&quot; &quot;396808&quot;
+## [113] &quot;396332&quot; &quot;396150&quot; &quot;394309&quot; &quot;391496&quot; &quot;369359&quot; &quot;339659&quot; &quot;339658&quot; &quot;339657&quot;
+## [121] &quot;339656&quot; &quot;339655&quot; &quot;339654&quot; &quot;339653&quot; &quot;339652&quot; &quot;339651&quot; &quot;339650&quot; &quot;339649&quot;
+## [129] &quot;339648&quot; &quot;339647&quot; &quot;339646&quot; &quot;339645&quot; &quot;339644&quot; &quot;339643&quot; &quot;339642&quot; &quot;339641&quot;
+## [137] &quot;339640&quot; &quot;339639&quot; &quot;339638&quot; &quot;339637&quot; &quot;339636&quot; &quot;339635&quot; &quot;339634&quot; &quot;339633&quot;
+## [145] &quot;339632&quot; &quot;339631&quot; &quot;339630&quot; &quot;339629&quot; &quot;339628&quot; &quot;339627&quot; &quot;339626&quot; &quot;339625&quot;
+## [153] &quot;339624&quot; &quot;339623&quot; &quot;339622&quot; &quot;339621&quot; &quot;339620&quot; &quot;339619&quot; &quot;253512&quot; &quot;253403&quot;
+## [161] &quot;236549&quot; &quot;236548&quot; &quot;236547&quot; &quot;221889&quot; &quot;160886&quot; &quot;155682&quot; &quot;155309&quot; &quot;155093&quot;
+## [169] &quot;155053&quot; &quot;154360&quot; &quot;154063&quot; &quot;153438&quot; &quot;152839&quot; &quot;151388&quot; &quot;150018&quot; &quot;149551&quot;
+## [177] &quot;149418&quot; &quot;149160&quot; &quot;149035&quot; &quot;148411&quot; &quot;148262&quot; &quot;148180&quot; &quot;146125&quot; &quot;145984&quot;
+## [185] &quot;145474&quot; &quot;145468&quot; &quot;145332&quot; &quot;145107&quot; &quot;144677&quot; &quot;144194&quot; &quot;127268&quot; &quot;98242&quot; 
+## [193] &quot;98241&quot;  &quot;98240&quot;  &quot;98239&quot;  &quot;98238&quot;  &quot;98237&quot;  &quot;98236&quot;  &quot;98235&quot;  &quot;59247&quot; 
+## [201] &quot;59246&quot;  &quot;59245&quot;  &quot;59243&quot;  &quot;59226&quot;  &quot;59224&quot;  &quot;59223&quot;  &quot;59222&quot;  &quot;59221&quot; 
+## [209] &quot;59010&quot;  &quot;59005&quot;  &quot;59004&quot;  &quot;37145&quot;  &quot;32099&quot;  &quot;18106&quot;  &quot;18105&quot;  &quot;18104&quot; 
+## [217] &quot;18103&quot;  &quot;18102&quot;  &quot;18101&quot;  &quot;18100&quot;  &quot;18099&quot;  &quot;18098&quot;  &quot;18097&quot;  &quot;18096&quot; 
+## [225] &quot;18095&quot;  &quot;18094&quot;  &quot;18093&quot;  &quot;18091&quot;  &quot;18090&quot;  &quot;18089&quot;  &quot;18088&quot;  &quot;18087&quot;</code></pre>
+</div>
+<div id="narrowing-our-focus" class="section level3">
+<h3>Narrowing our focus</h3>
+<p>If we know beforehand what sort of links we'd like to find , we can to use the <code>db</code> argument to narrow the focus of a call to <code>entrez_link</code>.</p>
+<p>For instance, say we are interested in knowing about all of the RNA transcripts associated with the Amyloid Beta Precursor gene in humans. Transcript sequences are stored in the nucleotide database (referred to as <code>nuccore</code> in EUtils), so to find transcripts associated with a given gene we need to set <code>dbfrom=gene</code> and <code>db=nuccore</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nuc_links &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">'gene'</span>, <span class="dt">id=</span><span class="dv">351</span>, <span class="dt">db=</span><span class="st">'nuccore'</span>)
+nuc_links</code></pre></div>
 <pre><code>## elink object with contents:
 ##  $links: IDs for linked records from NCBI
-## 
-</code></pre>
-
-<pre><code class="r">nuc_links$links
-</code></pre>
-
+## </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nuc_links<span class="op">$</span>links</code></pre></div>
 <pre><code>## elink result with information from 5 databases:
 ## [1] gene_nuccore            gene_nuccore_mgc        gene_nuccore_pos       
-## [4] gene_nuccore_refseqgene gene_nuccore_refseqrna
-</code></pre>
-
-<p>The object we get back contains links to the nucleotide database generally, but
-also to special subsets of that database like <a href="http://www.ncbi.nlm.nih.gov/refseq/">refseq</a>. 
-We can take advantage of this narrower set of links to find IDs that match unique
-transcripts from our gene of interest.</p>
-
-<pre><code class="r">nuc_links$links$gene_nuccore_refseqrna
-</code></pre>
-
-<pre><code>##  [1] &quot;1519241754&quot; &quot;1370481385&quot; &quot;324021747&quot;  &quot;324021746&quot;  &quot;324021739&quot; 
-##  [6] &quot;324021737&quot;  &quot;324021735&quot;  &quot;228008405&quot;  &quot;228008404&quot;  &quot;228008402&quot; 
-## [11] &quot;228008401&quot;
-</code></pre>
-
-<p>We can use these ids in calls to <code>entrez_fetch()</code> or <code>entrez_summary()</code> to learn
-more about the transcripts they represent. </p>
-
-<p>###External links</p>
-
-<p>In addition to finding data within the NCBI, <code>entrez_link</code> can turn up
-connections to external databases. Perhaps the most interesting example is
-finding links to the full text of papers in PubMed. For example, when I wrote
-this document the first paper linked to Amyloid Beta Precursor  had a unique ID of
-<code>25500142</code>. We can find links to the full text of that paper with <code>entrez_link</code> 
-by setting the <code>cmd</code> argument to &#39;llinks&#39;:</p>
-
-<pre><code class="r">paper_links &lt;- entrez_link(dbfrom=&quot;pubmed&quot;, id=25500142, cmd=&quot;llinks&quot;)
-paper_links
-</code></pre>
-
+## [4] gene_nuccore_refseqgene gene_nuccore_refseqrna</code></pre>
+<p>The object we get back contains links to the nucleotide database generally, but also to special subsets of that database like <a href="https://www.ncbi.nlm.nih.gov/refseq/">refseq</a>. We can take advantage of this narrower set of links to find IDs that match unique transcripts from our gene of interest.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nuc_links<span class="op">$</span>links<span class="op">$</span>gene_nuccore_refseqrna</code></pre></div>
+<pre><code>##  [1] &quot;1889693417&quot; &quot;1869284273&quot; &quot;1676441520&quot; &quot;1676319912&quot; &quot;1675178653&quot;
+##  [6] &quot;1675118060&quot; &quot;1675113449&quot; &quot;1675055422&quot; &quot;1674986144&quot; &quot;1519241754&quot;
+## [11] &quot;1370481385&quot; &quot;324021746&quot;</code></pre>
+<p>We can use these ids in calls to <code>entrez_fetch()</code> or <code>entrez_summary()</code> to learn more about the transcripts they represent.</p>
+</div>
+<div id="external-links" class="section level3">
+<h3>External links</h3>
+<p>In addition to finding data within the NCBI, <code>entrez_link</code> can turn up connections to external databases. Perhaps the most interesting example is finding links to the full text of papers in PubMed. For example, when I wrote this document the first paper linked to Amyloid Beta Precursor had a unique ID of <code>25500142</code>. We can find links to the full text of that paper with <code>entrez_link</code> by setting the <code>cmd</code> argument to 'llinks':</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">paper_links &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">&quot;pubmed&quot;</span>, <span class="dt">id=</span><span class="dv">25500142</span>, <span class="dt">cmd=</span><span class="st">&quot;llinks&quot;</span>)
+paper_links</code></pre></div>
 <pre><code>## elink object with contents:
-##  $linkouts: links to external websites
-</code></pre>
-
-<p>Each element of the <code>linkouts</code> object contains information about an external
-source of data on this paper:</p>
-
-<pre><code class="r">paper_links$linkouts
-</code></pre>
-
+##  $linkouts: links to external websites</code></pre>
+<p>Each element of the <code>linkouts</code> object contains information about an external source of data on this paper:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">paper_links<span class="op">$</span>linkouts</code></pre></div>
 <pre><code>## $ID_25500142
 ## $ID_25500142[[1]]
 ## Linkout from Elsevier Science 
@@ -717,134 +459,78 @@ source of data on this paper:</p>
 ## 
 ## $ID_25500142[[6]]
 ## Linkout from Mouse Genome Informatics (MGI) 
-##  $Url: http://www.informatics.jax ...
-</code></pre>
-
-<p>Each of those linkout objects contains quite a lot of information, but the URL 
-is probably the most useful. For that reason, <code>rentrez</code> provides the
-function <code>linkout_urls</code> to make extracting just the URL simple:</p>
-
-<pre><code class="r">linkout_urls(paper_links)
-</code></pre>
-
+##  $Url: http://www.informatics.jax ...</code></pre>
+<p>Each of those linkout objects contains quite a lot of information, but the URL is probably the most useful. For that reason, <code>rentrez</code> provides the function <code>linkout_urls</code> to make extracting just the URL simple:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">linkout_urls</span>(paper_links)</code></pre></div>
 <pre><code>## $ID_25500142
 ## [1] &quot;https://linkinghub.elsevier.com/retrieve/pii/S0014-4886(14)00393-8&quot;     
 ## [2] &quot;http://europepmc.org/abstract/MED/25500142&quot;                             
 ## [3] &quot;http://ovidsp.ovid.com/ovidweb.cgi?T=JS&amp;PAGE=linkout&amp;SEARCH=25500142.ui&quot;
 ## [4] &quot;https://www.ncbi.nlm.nih.gov/pmc/articles/pmid/25500142/&quot;               
 ## [5] &quot;https://medlineplus.gov/alzheimersdisease.html&quot;                         
-## [6] &quot;http://www.informatics.jax.org/reference/25500142&quot;
-</code></pre>
-
-<p>The full list of options for the <code>cmd</code> argument are given in in-line
-documentation (<code>?entrez_link</code>). If you are interested in finding full text
-records for a large number of articles checkout the package 
-<a href="https://github.com/ropensci/fulltext">fulltext</a> which makes use of multiple
-sources (including the NCBI) to discover the full text articles.</p>
-
-<p>###Using more than one ID</p>
-
-<p>It is possible to pass more than one ID to <code>entrez_link()</code>. By default, doing so
-will give you a single elink object containing the complete set of links for 
-<em>all</em> of the IDs that you specified. So, if you were looking for protein IDs
-related to specific genes you could do:</p>
-
-<pre><code class="r">all_links_together  &lt;- entrez_link(db=&quot;protein&quot;, dbfrom=&quot;gene&quot;, id=c(&quot;93100&quot;, &quot;223646&quot;))
-all_links_together
-</code></pre>
-
+## [6] &quot;http://www.informatics.jax.org/reference/25500142&quot;</code></pre>
+<p>The full list of options for the <code>cmd</code> argument are given in in-line documentation (<code>?entrez_link</code>). If you are interested in finding full text records for a large number of articles checkout the package <a href="https://github.com/ropensci/fulltext">fulltext</a> which makes use of multiple sources (including the NCBI) to discover the full text articles.</p>
+</div>
+<div id="using-more-than-one-id" class="section level3">
+<h3>Using more than one ID</h3>
+<p>It is possible to pass more than one ID to <code>entrez_link()</code>. By default, doing so will give you a single elink object containing the complete set of links for <em>all</em> of the IDs that you specified. So, if you were looking for protein IDs related to specific genes you could do:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_links_together  &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">db=</span><span class="st">&quot;protein&quot;</span>, <span class="dt">dbfrom=</span><span class="st">&quot;gene&quot;</span>, <span class="dt">id=</span><span class="kw">c</span>(<span class="st">&quot;93100&quot;</span>, <span class="st">&quot;223646&quot;</span>))
+all_links_together</code></pre></div>
 <pre><code>## elink object with contents:
 ##  $links: IDs for linked records from NCBI
-## 
-</code></pre>
-
-<pre><code class="r">all_links_together$links$gene_protein
-</code></pre>
-
-<pre><code>##  [1] &quot;1387845369&quot; &quot;1387845338&quot; &quot;1370513171&quot; &quot;1370513169&quot; &quot;1370513166&quot;
-##  [6] &quot;1034662002&quot; &quot;1034662000&quot; &quot;1034661998&quot; &quot;1034661996&quot; &quot;1034661994&quot;
-## [11] &quot;1034661992&quot; &quot;558472750&quot;  &quot;545685826&quot;  &quot;194394158&quot;  &quot;166221824&quot; 
-## [16] &quot;154936864&quot;  &quot;148697547&quot;  &quot;148697546&quot;  &quot;122346659&quot;  &quot;119602646&quot; 
-## [21] &quot;119602645&quot;  &quot;119602644&quot;  &quot;119602643&quot;  &quot;119602642&quot;  &quot;81899807&quot;  
-## [26] &quot;74215266&quot;   &quot;74186774&quot;   &quot;37787317&quot;   &quot;37787309&quot;   &quot;37787307&quot;  
-## [31] &quot;37787305&quot;   &quot;37589273&quot;   &quot;33991172&quot;   &quot;31982089&quot;   &quot;26339824&quot;  
-## [36] &quot;26329351&quot;   &quot;21619615&quot;   &quot;10834676&quot;
-</code></pre>
-
-<p>Although this behaviour might sometimes be useful, it means we&#39;ve lost track of
-which <code>protein</code> ID is linked to which <code>gene</code> ID. To retain that information we
-can set <code>by_id</code> to <code>TRUE</code>. This gives us a list of elink objects, each once
-containing links from a single <code>gene</code> ID:</p>
-
-<pre><code class="r">all_links_sep  &lt;- entrez_link(db=&quot;protein&quot;, dbfrom=&quot;gene&quot;, id=c(&quot;93100&quot;, &quot;223646&quot;), by_id=TRUE)
-all_links_sep
-</code></pre>
-
+## </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_links_together<span class="op">$</span>links<span class="op">$</span>gene_protein</code></pre></div>
+<pre><code>##  [1] &quot;1720383952&quot; &quot;1387845369&quot; &quot;1387845338&quot; &quot;1370513171&quot; &quot;1370513169&quot;
+##  [6] &quot;1034662000&quot; &quot;1034661998&quot; &quot;1034661996&quot; &quot;1034661994&quot; &quot;1034661992&quot;
+## [11] &quot;558472750&quot;  &quot;545685826&quot;  &quot;194394158&quot;  &quot;166221824&quot;  &quot;154936864&quot; 
+## [16] &quot;148697547&quot;  &quot;148697546&quot;  &quot;122346659&quot;  &quot;119602646&quot;  &quot;119602645&quot; 
+## [21] &quot;119602644&quot;  &quot;119602643&quot;  &quot;119602642&quot;  &quot;81899807&quot;   &quot;74215266&quot;  
+## [26] &quot;74186774&quot;   &quot;37787317&quot;   &quot;37787309&quot;   &quot;37787307&quot;   &quot;37787305&quot;  
+## [31] &quot;37589273&quot;   &quot;33991172&quot;   &quot;31982089&quot;   &quot;26339824&quot;   &quot;26329351&quot;  
+## [36] &quot;21619615&quot;   &quot;10834676&quot;</code></pre>
+<p>Although this behaviour might sometimes be useful, it means we've lost track of which <code>protein</code> ID is linked to which <code>gene</code> ID. To retain that information we can set <code>by_id</code> to <code>TRUE</code>. This gives us a list of elink objects, each once containing links from a single <code>gene</code> ID:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_links_sep  &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">db=</span><span class="st">&quot;protein&quot;</span>, <span class="dt">dbfrom=</span><span class="st">&quot;gene&quot;</span>, <span class="dt">id=</span><span class="kw">c</span>(<span class="st">&quot;93100&quot;</span>, <span class="st">&quot;223646&quot;</span>), <span class="dt">by_id=</span><span class="ot">TRUE</span>)
+all_links_sep</code></pre></div>
 <pre><code>## List of 2 elink objects,each containing
 ##   $links: IDs for linked records from NCBI
-## 
-</code></pre>
-
-<pre><code class="r">lapply(all_links_sep, function(x) x$links$gene_protein)
-</code></pre>
-
+## </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lapply</span>(all_links_sep, <span class="cf">function</span>(x) x<span class="op">$</span>links<span class="op">$</span>gene_protein)</code></pre></div>
 <pre><code>## [[1]]
-##  [1] &quot;1387845369&quot; &quot;1387845338&quot; &quot;1370513171&quot; &quot;1370513169&quot; &quot;1370513166&quot;
-##  [6] &quot;1034662002&quot; &quot;1034662000&quot; &quot;1034661998&quot; &quot;1034661996&quot; &quot;1034661994&quot;
-## [11] &quot;1034661992&quot; &quot;558472750&quot;  &quot;545685826&quot;  &quot;194394158&quot;  &quot;166221824&quot; 
-## [16] &quot;154936864&quot;  &quot;122346659&quot;  &quot;119602646&quot;  &quot;119602645&quot;  &quot;119602644&quot; 
-## [21] &quot;119602643&quot;  &quot;119602642&quot;  &quot;37787309&quot;   &quot;37787307&quot;   &quot;37787305&quot;  
-## [26] &quot;33991172&quot;   &quot;21619615&quot;   &quot;10834676&quot;  
+##  [1] &quot;1387845369&quot; &quot;1387845338&quot; &quot;1370513171&quot; &quot;1370513169&quot; &quot;1034662000&quot;
+##  [6] &quot;1034661998&quot; &quot;1034661996&quot; &quot;1034661994&quot; &quot;1034661992&quot; &quot;558472750&quot; 
+## [11] &quot;545685826&quot;  &quot;194394158&quot;  &quot;166221824&quot;  &quot;154936864&quot;  &quot;122346659&quot; 
+## [16] &quot;119602646&quot;  &quot;119602645&quot;  &quot;119602644&quot;  &quot;119602643&quot;  &quot;119602642&quot; 
+## [21] &quot;37787309&quot;   &quot;37787307&quot;   &quot;37787305&quot;   &quot;33991172&quot;   &quot;21619615&quot;  
+## [26] &quot;10834676&quot;  
 ## 
 ## [[2]]
-##  [1] &quot;148697547&quot; &quot;148697546&quot; &quot;81899807&quot;  &quot;74215266&quot;  &quot;74186774&quot; 
-##  [6] &quot;37787317&quot;  &quot;37589273&quot;  &quot;31982089&quot;  &quot;26339824&quot;  &quot;26329351&quot;
-</code></pre>
-
+##  [1] &quot;1720383952&quot; &quot;148697547&quot;  &quot;148697546&quot;  &quot;81899807&quot;   &quot;74215266&quot;  
+##  [6] &quot;74186774&quot;   &quot;37787317&quot;   &quot;37589273&quot;   &quot;31982089&quot;   &quot;26339824&quot;  
+## [11] &quot;26329351&quot;</code></pre>
+</div>
+</div>
+<div id="getting-summary-data-entrez_summary" class="section level2">
 <h2>Getting summary data: <code>entrez_summary()</code></h2>
-
-<p>Having found the unique IDs for some records via <code>entrez_search</code> or <code>entrez_link()</code>, you are
-probably going to want to learn something about them. The <code>Eutils</code> API has two
-ways to get information about a record. <code>entrez_fetch()</code> returns &#39;full&#39; records
-in varying formats and <code>entrez_summary()</code> returns less information about each
-record, but in relatively simple format. Very often the summary records have the information
-you are after, so <code>rentrez</code> provides functions to parse and summarise summary
-records.</p>
-
-<p>###The summary record</p>
-
-<p><code>entrez_summary()</code> takes a vector of unique IDs for the samples you want to get
-summary information from. Let&#39;s start by finding out something about the paper
-describing <a href="https://github.com/ropensci/taxize">Taxize</a>, using its PubMed ID:</p>
-
-<pre><code class="r">taxize_summ &lt;- entrez_summary(db=&quot;pubmed&quot;, id=24555091)
-taxize_summ
-</code></pre>
-
+<p>Having found the unique IDs for some records via <code>entrez_search</code> or <code>entrez_link()</code>, you are probably going to want to learn something about them. The <code>Eutils</code> API has two ways to get information about a record. <code>entrez_fetch()</code> returns 'full' records in varying formats and <code>entrez_summary()</code> returns less information about each record, but in relatively simple format. Very often the summary records have the information you are after, so <code>rentrez</code> provides functions to parse and summarise summary records.</p>
+<div id="the-summary-record" class="section level3">
+<h3>The summary record</h3>
+<p><code>entrez_summary()</code> takes a vector of unique IDs for the samples you want to get summary information from. Let's start by finding out something about the paper describing <a href="https://github.com/ropensci/taxize">Taxize</a>, using its PubMed ID:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">taxize_summ &lt;-<span class="st"> </span><span class="kw">entrez_summary</span>(<span class="dt">db=</span><span class="st">&quot;pubmed&quot;</span>, <span class="dt">id=</span><span class="dv">24555091</span>)
+taxize_summ</code></pre></div>
 <pre><code>## esummary result with 42 items:
-##  [1] uid               pubdate           epubdate         
-##  [4] source            authors           lastauthor       
-##  [7] title             sorttitle         volume           
-## [10] issue             pages             lang             
-## [13] nlmuniqueid       issn              essn             
-## [16] pubtype           recordstatus      pubstatus        
-## [19] articleids        history           references       
-## [22] attributes        pmcrefcount       fulljournalname  
-## [25] elocationid       doctype           srccontriblist   
-## [28] booktitle         medium            edition          
-## [31] publisherlocation publishername     srcdate          
-## [34] reportnumber      availablefromurl  locationlabel    
-## [37] doccontriblist    docdate           bookname         
-## [40] chapter           sortpubdate       sortfirstauthor
-</code></pre>
-
-<p>Once again, the object returned by <code>entrez_summary</code> behaves like a list, so you can extract
-elements using <code>$</code>. For instance, we could convert our PubMed ID to another
-article identifier&hellip;</p>
-
-<pre><code class="r">taxize_summ$articleids
-</code></pre>
-
+##  [1] uid               pubdate           epubdate          source           
+##  [5] authors           lastauthor        title             sorttitle        
+##  [9] volume            issue             pages             lang             
+## [13] nlmuniqueid       issn              essn              pubtype          
+## [17] recordstatus      pubstatus         articleids        history          
+## [21] references        attributes        pmcrefcount       fulljournalname  
+## [25] elocationid       doctype           srccontriblist    booktitle        
+## [29] medium            edition           publisherlocation publishername    
+## [33] srcdate           reportnumber      availablefromurl  locationlabel    
+## [37] doccontriblist    docdate           bookname          chapter          
+## [41] sortpubdate       sortfirstauthor</code></pre>
+<p>Once again, the object returned by <code>entrez_summary</code> behaves like a list, so you can extract elements using <code>$</code>. For instance, we could convert our PubMed ID to another article identifier...</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">taxize_summ<span class="op">$</span>articleids</code></pre></div>
 <pre><code>##       idtype idtypen                           value
 ## 1     pubmed       1                        24555091
 ## 2        doi       3 10.12688/f1000research.2-191.v2
@@ -853,36 +539,24 @@ article identifier&hellip;</p>
 ## 5        eid       8                        24555091
 ## 6    version       8                               2
 ## 7 version-id       8                               2
-## 8      pmcid       5             pmc-id: PMC3901538;
-</code></pre>
-
-<p>&hellip;or see how many times the article has been cited in PubMed Central papers</p>
-
-<pre><code class="r">taxize_summ$pmcrefcount
-</code></pre>
-
-<pre><code>## [1] 29
-</code></pre>
-
-<p>###Dealing with many records</p>
-
-<p>If you give <code>entrez_summary()</code> a vector with more than one ID you&#39;ll get a
-list of summary records back. Let&#39;s get those <em>Plasmodium vivax</em> papers we found
-in the <code>entrez_search()</code> section back, and fetch some summary data on each paper:</p>
-
-<pre><code class="r">vivax_search &lt;- entrez_search(db = &quot;pubmed&quot;,
-                              term = &quot;(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])&quot;)
-multi_summs &lt;- entrez_summary(db=&quot;pubmed&quot;, id=vivax_search$ids)
-</code></pre>
-
-<p><code>rentrez</code> provides a helper function, <code>extract_from_esummary()</code> that takes one
-or more elements from every summary record in one of these lists. Here it is
-working with one&hellip;</p>
-
-<pre><code class="r">extract_from_esummary(multi_summs, &quot;fulljournalname&quot;)
-</code></pre>
-
-<pre><code>##                                                                                                                 29016333 
+## 8      pmcid       5             pmc-id: PMC3901538;</code></pre>
+<p>...or see how many times the article has been cited in PubMed Central papers</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">taxize_summ<span class="op">$</span>pmcrefcount</code></pre></div>
+<pre><code>## [1] 64</code></pre>
+</div>
+<div id="dealing-with-many-records" class="section level3">
+<h3>Dealing with many records</h3>
+<p>If you give <code>entrez_summary()</code> a vector with more than one ID you'll get a list of summary records back. Let's get those <em>Plasmodium vivax</em> papers we found in the <code>entrez_search()</code> section back, and fetch some summary data on each paper:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vivax_search &lt;-<span class="st"> </span><span class="kw">entrez_search</span>(<span class="dt">db =</span> <span class="st">&quot;pubmed&quot;</span>,
+                              <span class="dt">term =</span> <span class="st">&quot;(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])&quot;</span>)
+multi_summs &lt;-<span class="st"> </span><span class="kw">entrez_summary</span>(<span class="dt">db=</span><span class="st">&quot;pubmed&quot;</span>, <span class="dt">id=</span>vivax_search<span class="op">$</span>ids)</code></pre></div>
+<p><code>rentrez</code> provides a helper function, <code>extract_from_esummary()</code> that takes one or more elements from every summary record in one of these lists. Here it is working with one...</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">extract_from_esummary</span>(multi_summs, <span class="st">&quot;fulljournalname&quot;</span>)</code></pre></div>
+<pre><code>##                                                                                                                 32933490 
+##                                                                                                &quot;BMC infectious diseases&quot; 
+##                                                                                                                 32745103 
+##                                                                                       &quot;PLoS neglected tropical diseases&quot; 
+##                                                                                                                 29016333 
 ##                                                                  &quot;The American journal of tropical medicine and hygiene&quot; 
 ##                                                                                                                 28298235 
 ##                                                                                                        &quot;Malaria journal&quot; 
@@ -909,168 +583,112 @@ working with one&hellip;</p>
 ##                                                                                                                 17368986 
 ##                                                                                                 &quot;Trends in parasitology&quot; 
 ##                                                                                                                 12374849 
-##                                        &quot;Proceedings of the National Academy of Sciences of the United States of America&quot;
-</code></pre>
-
-<p>&hellip; and several elements:</p>
-
-<pre><code class="r">date_and_cite &lt;- extract_from_esummary(multi_summs, c(&quot;pubdate&quot;, &quot;pmcrefcount&quot;,  &quot;title&quot;))
-knitr::kable(head(t(date_and_cite)), row.names=FALSE)
-</code></pre>
-
-<table><thead>
-<tr>
+##                                        &quot;Proceedings of the National Academy of Sciences of the United States of America&quot;</code></pre>
+<p>... and several elements:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">date_and_cite &lt;-<span class="st"> </span><span class="kw">extract_from_esummary</span>(multi_summs, <span class="kw">c</span>(<span class="st">&quot;pubdate&quot;</span>, <span class="st">&quot;pmcrefcount&quot;</span>,  <span class="st">&quot;title&quot;</span>))
+knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(<span class="kw">t</span>(date_and_cite)), <span class="dt">row.names=</span><span class="ot">FALSE</span>)</code></pre></div>
+<table>
+<colgroup>
+<col width="5%"></col>
+<col width="5%"></col>
+<col width="88%"></col>
+</colgroup>
+<thead>
+<tr class="header">
 <th align="left">pubdate</th>
 <th align="left">pmcrefcount</th>
 <th align="left">title</th>
 </tr>
-</thead><tbody>
-<tr>
-<td align="left">2017 Dec</td>
-<td align="left">1</td>
-<td align="left">Distribution of Mutations Associated with Antifolate and Chloroquine Resistance among Imported &lt;i&gt;Plasmodium vivax&lt;/i&gt; in the State of Qatar.</td>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2020 Sep 15</td>
+<td align="left"></td>
+<td align="left">Distribution pattern of amino acid mutations in chloroquine and antifolate drug resistance associated genes in complicated and uncomplicated Plasmodium vivax isolates from Chandigarh, North India.</td>
 </tr>
-<tr>
+<tr class="even">
+<td align="left">2020 Aug</td>
+<td align="left">1</td>
+<td align="left">Population genomics identifies a distinct Plasmodium vivax population on the China-Myanmar border of Southeast Asia.</td>
+</tr>
+<tr class="odd">
+<td align="left">2017 Dec</td>
+<td align="left">4</td>
+<td align="left">Distribution of Mutations Associated with Antifolate and Chloroquine Resistance among Imported <i>Plasmodium vivax</i> in the State of Qatar.</td>
+</tr>
+<tr class="even">
 <td align="left">2017 Mar 16</td>
-<td align="left">6</td>
+<td align="left">15</td>
 <td align="left">Clinical and molecular surveillance of drug resistant vivax malaria in Myanmar (2009-2016).</td>
 </tr>
-<tr>
+<tr class="odd">
 <td align="left">2014 Aug</td>
 <td align="left">2</td>
 <td align="left">Prevalence of mutations in the antifolates resistance-associated genes (dhfr and dhps) in Plasmodium vivax parasites from Eastern and Central Sudan.</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">2014</td>
-<td align="left">6</td>
+<td align="left">9</td>
 <td align="left">Prevalence of polymorphisms in antifolate drug resistance molecular marker genes pvdhfr and pvdhps in clinical isolates of Plasmodium vivax from Kolkata, India.</td>
 </tr>
-<tr>
-<td align="left">2013 Sep 5</td>
-<td align="left">4</td>
-<td align="left">Prevalence and patterns of antifolate and chloroquine drug resistance markers in Plasmodium vivax across Pakistan.</td>
-</tr>
-<tr>
-<td align="left">2012 Dec</td>
-<td align="left">17</td>
-<td align="left">Prevalence of drug resistance-associated gene mutations in Plasmodium vivax in Central China.</td>
-</tr>
-</tbody></table>
-
-<p>##Fetching full records: <code>entrez_fetch()</code></p>
-
-<p>As useful as the summary records are, sometimes they just don&#39;t have the
-information that you need. If you want a complete representation of a record you
-can use <code>entrez_fetch</code>, using the argument <code>rettype</code> to specify the format you&#39;d
-like the record in.</p>
-
-<p>###Fetch DNA sequences in fasta format</p>
-
-<p>Let&#39;s extend the example given in the <code>entrez_link()</code> section about finding
-transcript for a given gene. This time we will fetch cDNA sequences of those
-transcripts.We can start by repeating the steps in the earlier example
-to get nucleotide IDs for refseq transcripts of two genes:</p>
-
-<pre><code class="r">gene_ids &lt;- c(351, 11647)
-linked_seq_ids &lt;- entrez_link(dbfrom=&quot;gene&quot;, id=gene_ids, db=&quot;nuccore&quot;)
-linked_transripts &lt;- linked_seq_ids$links$gene_nuccore_refseqrna
-head(linked_transripts)
-</code></pre>
-
-<pre><code>## [1] &quot;1519241754&quot; &quot;1370481385&quot; &quot;1039766414&quot; &quot;1039766413&quot; &quot;1039766411&quot;
-## [6] &quot;1039766410&quot;
-</code></pre>
-
-<p>Now we can get our sequences with <code>entrez_fetch</code>, setting <code>rettype</code> to &ldquo;fasta&rdquo;
-(the list of formats available for <a href="http://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/">each database is give in this table</a>):</p>
-
-<pre><code class="r">all_recs &lt;- entrez_fetch(db=&quot;nuccore&quot;, id=linked_transripts, rettype=&quot;fasta&quot;)
-class(all_recs)
-</code></pre>
-
-<pre><code>## [1] &quot;character&quot;
-</code></pre>
-
-<pre><code class="r">nchar(all_recs)
-</code></pre>
-
-<pre><code>## [1] 57045
-</code></pre>
-
-<p>Congratulations, now you have a really huge character vector! Rather than
-printing all those thousands of bases we can take a peak at the top of the file:</p>
-
-<pre><code class="r">cat(strwrap(substr(all_recs, 1, 500)), sep=&quot;\n&quot;)
-</code></pre>
-
-<pre><code>## &gt;NM_000484.4 Homo sapiens amyloid beta precursor protein (APP),
-## transcript variant 1, mRNA
-## GTCAGTTTCCTCGGCAGCGGTAGGCGAGAGCACGCGGAGGAGCGTGCGCGGGGGCCCCGGGAGACGGCGG
-## CGGTGGCGGCGCGGGCAGAGCAAGGACGCGGCGGATCCCACTCGCACAGCAGCGCACTCGGTGCCCCGCG
-## CAGGGTCGCGATGCTGCCCGGTTTGGCACTGCTCCTGCTGGCCGCCTGGACGGCTCGGGCGCTGGAGGTA
-## CCCACTGATGGTAATGCTGGCCTGCTGGCTGAACCCCAGATTGCCATGTTCTGTGGCAGACTGAACATGC
-## ACATGAATGTCCAGAATGGGAAGTGGGATTCAGATCCATCAGGGACCAAAACCTGCATTGATACCAAGGA
-## AGGCATCCTGCAGTATTGCCAAGAAGTCTACCCTGAACTGCAGATCACCAATGT
-</code></pre>
-
-<p>If we wanted to use these sequences in some other application we could write them 
-to file:</p>
-
-<pre><code class="r">write(all_recs, file=&quot;my_transcripts.fasta&quot;)
-</code></pre>
-
-<p>Alternatively, if you want to use them  within an R session<br/>
-we could write them to a  temporary file then read that. In this case I&#39;m using <code>read.dna()</code> from the
-pylogenetics package ape (but not executing the code block in this vignette, so
-you don&#39;t have to install that package):</p>
-
-<pre><code class="r">temp &lt;- tempfile()
-write(all_recs, temp)
-parsed_recs &lt;- ape::read.dna(all_recs, temp)
-</code></pre>
-
-<p>###Fetch a parsed XML document</p>
-
-<p>Most of the NCBI&#39;s databases can return records in XML format. In additional to
-downloading the text-representation of these files, <code>entrez_fetch()</code> can return
-objects parsed by the <code>XML</code> package. As an example, we can check out the  Taxonomy
-database&#39;s record for (did I mention they are amazing&hellip;.) <em>Tetrahymena
-thermophila</em>, specifying we want the result to be parsed by setting
-<code>parsed=TRUE</code>:</p>
-
-<pre><code class="r">Tt &lt;- entrez_search(db=&quot;taxonomy&quot;, term=&quot;(Tetrahymena thermophila[ORGN]) AND Species[RANK]&quot;)
-tax_rec &lt;- entrez_fetch(db=&quot;taxonomy&quot;, id=Tt$ids, rettype=&quot;xml&quot;, parsed=TRUE)
-class(tax_rec)
-</code></pre>
-
-<pre><code>## [1] &quot;XMLInternalDocument&quot; &quot;XMLAbstractDocument&quot;
-</code></pre>
-
-<p>The package XML (which you have if you have installed <code>rentrez</code>) provides
-functions to get information from these files. For relatively simple records
-like this one you can use <code>XML::xmlToList</code>:</p>
-
-<pre><code class="r">tax_list &lt;- XML::xmlToList(tax_rec)
-tax_list$Taxon$GeneticCode
-</code></pre>
-
+</tbody>
+</table>
+</div>
+</div>
+<div id="fetching-full-records-entrez_fetch" class="section level2">
+<h2>Fetching full records: <code>entrez_fetch()</code></h2>
+<p>As useful as the summary records are, sometimes they just don't have the information that you need. If you want a complete representation of a record you can use <code>entrez_fetch</code>, using the argument <code>rettype</code> to specify the format you'd like the record in.</p>
+<div id="fetch-dna-sequences-in-fasta-format" class="section level3">
+<h3>Fetch DNA sequences in fasta format</h3>
+<p>Let's extend the example given in the <code>entrez_link()</code> section about finding transcript for a given gene. This time we will fetch cDNA sequences of those transcripts.We can start by repeating the steps in the earlier example to get nucleotide IDs for refseq transcripts of two genes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gene_ids &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">351</span>, <span class="dv">11647</span>)
+linked_seq_ids &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">&quot;gene&quot;</span>, <span class="dt">id=</span>gene_ids, <span class="dt">db=</span><span class="st">&quot;nuccore&quot;</span>)
+linked_transripts &lt;-<span class="st"> </span>linked_seq_ids<span class="op">$</span>links<span class="op">$</span>gene_nuccore_refseqrna
+<span class="kw">head</span>(linked_transripts)</code></pre></div>
+<pre><code>## [1] &quot;1907153913&quot; &quot;1889693417&quot; &quot;1869284273&quot; &quot;1676441520&quot; &quot;1676319912&quot;
+## [6] &quot;1675178653&quot;</code></pre>
+<p>Now we can get our sequences with <code>entrez_fetch</code>, setting <code>rettype</code> to &quot;fasta&quot; (the list of formats available for <a href="https://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/">each database is give in this table</a>):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_recs &lt;-<span class="st"> </span><span class="kw">entrez_fetch</span>(<span class="dt">db=</span><span class="st">&quot;nuccore&quot;</span>, <span class="dt">id=</span>linked_transripts, <span class="dt">rettype=</span><span class="st">&quot;fasta&quot;</span>)
+<span class="kw">class</span>(all_recs)</code></pre></div>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nchar</span>(all_recs)</code></pre></div>
+<pre><code>## [1] 57671</code></pre>
+<p>Congratulations, now you have a really huge character vector! Rather than printing all those thousands of bases we can take a peak at the top of the file:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(<span class="kw">strwrap</span>(<span class="kw">substr</span>(all_recs, <span class="dv">1</span>, <span class="dv">500</span>)), <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre></div>
+<pre><code>## &gt;XM_006538498.4 PREDICTED: Mus musculus alkaline phosphatase,
+## liver/bone/kidney (Alpl), transcript variant X2, mRNA
+## AGGCCCTGTAACTCCTCCAAGAGAACACATGCCCAGTCCAGAGAAGAGCACAAGGTAGATCTTGTGACCA
+## TCATCGGAACAAGCTGCAGTGGTAGCCTGGGTAGAAGCTGGCAGAGGGAGACCATCTGCAAACCAGGAAC
+## GCTGTGAGAAGAGAAAGGACAGAGGTCCTGACATACTGTCACAGCCGCTCTGATGTATGGATCGGAACGT
+## CAATTAACGTCAATTAACATCTGACGCTGCCCCCCCCCCCCTCTTCCCACCATCTGGGCTCCAGCGAGGG
+## ACGAATCTCAGGGTACACCATGATCTCACCATTTTTAGTACTGGCCATCGGCACCTGCCTTACCAACTCT
+## TTTGTGCCAGAGAAAGAGAGAGACCCCAG</code></pre>
+<p>If we wanted to use these sequences in some other application we could write them to file:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write</span>(all_recs, <span class="dt">file=</span><span class="st">&quot;my_transcripts.fasta&quot;</span>)</code></pre></div>
+<p>Alternatively, if you want to use them within an R session<br />
+we could write them to a temporary file then read that. In this case I'm using <code>read.dna()</code> from the pylogenetics package ape (but not executing the code block in this vignette, so you don't have to install that package):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">temp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
+<span class="kw">write</span>(all_recs, temp)
+parsed_recs &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">read.dna</span>(all_recs, temp)</code></pre></div>
+</div>
+<div id="fetch-a-parsed-xml-document" class="section level3">
+<h3>Fetch a parsed XML document</h3>
+<p>Most of the NCBI's databases can return records in XML format. In additional to downloading the text-representation of these files, <code>entrez_fetch()</code> can return objects parsed by the <code>XML</code> package. As an example, we can check out the Taxonomy database's record for (did I mention they are amazing....) <em>Tetrahymena thermophila</em>, specifying we want the result to be parsed by setting <code>parsed=TRUE</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Tt &lt;-<span class="st"> </span><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;taxonomy&quot;</span>, <span class="dt">term=</span><span class="st">&quot;(Tetrahymena thermophila[ORGN]) AND Species[RANK]&quot;</span>)
+tax_rec &lt;-<span class="st"> </span><span class="kw">entrez_fetch</span>(<span class="dt">db=</span><span class="st">&quot;taxonomy&quot;</span>, <span class="dt">id=</span>Tt<span class="op">$</span>ids, <span class="dt">rettype=</span><span class="st">&quot;xml&quot;</span>, <span class="dt">parsed=</span><span class="ot">TRUE</span>)
+<span class="kw">class</span>(tax_rec)</code></pre></div>
+<pre><code>## [1] &quot;XMLInternalDocument&quot; &quot;XMLAbstractDocument&quot;</code></pre>
+<p>The package XML (which you have if you have installed <code>rentrez</code>) provides functions to get information from these files. For relatively simple records like this one you can use <code>XML::xmlToList</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tax_list &lt;-<span class="st"> </span>XML<span class="op">::</span><span class="kw">xmlToList</span>(tax_rec)
+tax_list<span class="op">$</span>Taxon<span class="op">$</span>GeneticCode</code></pre></div>
 <pre><code>## $GCId
 ## [1] &quot;6&quot;
 ## 
 ## $GCName
-## [1] &quot;Ciliate Nuclear; Dasycladacean Nuclear; Hexamita Nuclear&quot;
-</code></pre>
-
-<p>For more complex records, which generate deeply-nested lists, you can use
-<a href="https://en.wikipedia.org/wiki/XPath">XPath expressions</a> along with the function 
-<code>XML::xpathSApply</code> or the extraction operatord <code>[</code> and <code>[[</code> to extract specific 
-parts of the file. For instance, we can get the scientific name of each taxon 
-in <em>T. thermophila</em>&#39;s lineage by specifying a path through the XML</p>
-
-<pre><code class="r">tt_lineage &lt;- tax_rec[&quot;//LineageEx/Taxon/ScientificName&quot;]
-tt_lineage[1:4]
-</code></pre>
-
+## [1] &quot;Ciliate Nuclear; Dasycladacean Nuclear; Hexamita Nuclear&quot;</code></pre>
+<p>For more complex records, which generate deeply-nested lists, you can use <a href="https://en.wikipedia.org/wiki/XPath">XPath expressions</a> along with the function <code>XML::xpathSApply</code> or the extraction operatord <code>[</code> and <code>[[</code> to extract specific parts of the file. For instance, we can get the scientific name of each taxon in <em>T. thermophila</em>'s lineage by specifying a path through the XML</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tt_lineage &lt;-<span class="st"> </span>tax_rec[<span class="st">&quot;//LineageEx/Taxon/ScientificName&quot;</span>]
+tt_lineage[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>]</code></pre></div>
 <pre><code>## [[1]]
 ## &lt;ScientificName&gt;cellular organisms&lt;/ScientificName&gt; 
 ## 
@@ -1078,226 +696,183 @@ tt_lineage[1:4]
 ## &lt;ScientificName&gt;Eukaryota&lt;/ScientificName&gt; 
 ## 
 ## [[3]]
-## &lt;ScientificName&gt;Alveolata&lt;/ScientificName&gt; 
+## &lt;ScientificName&gt;Sar&lt;/ScientificName&gt; 
 ## 
 ## [[4]]
-## &lt;ScientificName&gt;Ciliophora&lt;/ScientificName&gt;
-</code></pre>
-
-<p>As the name suggests, <code>XML::xpathSApply()</code> is a counterpart of base R&#39;s
-<code>sapply</code>, and can be used to apply a function to
-nodes in an XML object. A particularly useful function to apply is <code>XML::xmlValue</code>, 
-which returns the content of the node:</p>
-
-<pre><code class="r">XML::xpathSApply(tax_rec, &quot;//LineageEx/Taxon/ScientificName&quot;, XML::xmlValue)
-</code></pre>
-
-<pre><code>##  [1] &quot;cellular organisms&quot; &quot;Eukaryota&quot;          &quot;Alveolata&quot;         
-##  [4] &quot;Ciliophora&quot;         &quot;Intramacronucleata&quot; &quot;Oligohymenophorea&quot; 
-##  [7] &quot;Hymenostomatida&quot;    &quot;Tetrahymenina&quot;      &quot;Tetrahymenidae&quot;    
-## [10] &quot;Tetrahymena&quot;
-</code></pre>
-
+## &lt;ScientificName&gt;Alveolata&lt;/ScientificName&gt;</code></pre>
+<p>As the name suggests, <code>XML::xpathSApply()</code> is a counterpart of base R's <code>sapply</code>, and can be used to apply a function to nodes in an XML object. A particularly useful function to apply is <code>XML::xmlValue</code>, which returns the content of the node:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">XML<span class="op">::</span><span class="kw">xpathSApply</span>(tax_rec, <span class="st">&quot;//LineageEx/Taxon/ScientificName&quot;</span>, XML<span class="op">::</span>xmlValue)</code></pre></div>
+<pre><code>##  [1] &quot;cellular organisms&quot; &quot;Eukaryota&quot;          &quot;Sar&quot;               
+##  [4] &quot;Alveolata&quot;          &quot;Ciliophora&quot;         &quot;Intramacronucleata&quot;
+##  [7] &quot;Oligohymenophorea&quot;  &quot;Hymenostomatida&quot;    &quot;Tetrahymenina&quot;     
+## [10] &quot;Tetrahymenidae&quot;     &quot;Tetrahymena&quot;</code></pre>
 <p>There are a few more complex examples of using <code>XPath</code> <a href="https://github.com/ropensci/rentrez/wiki">on the rentrez wiki</a></p>
-
 <p><a name="web_history"></a></p>
-
-<p>##Using NCBI&#39;s Web History features</p>
-
-<p>When you are dealing with very large queries it can be time  consuming to pass
-long vectors of unique IDs to and from the NCBI. To avoid this problem, the NCBI
-provides a feature called &ldquo;web history&rdquo; which allows users to store IDs on the
-NCBI servers then refer to them in future calls.</p>
-
-<p>###Post a set of IDs to the NCBI for later use: <code>entrez_post()</code></p>
-
-<p>If you have a list of many NCBI IDs that you want to use later on, you can post
-them to the NCBI&#39;s severs. In order to provide a brief example, I&#39;m going to post just one
-ID, the <code>omim</code> identifier for asthma:</p>
-
-<pre><code class="r">upload &lt;- entrez_post(db=&quot;omim&quot;, id=600807)
-upload
-</code></pre>
-
-<pre><code>## Web history object (QueryKey = 1, WebEnv = NCID_1_26484...)
-</code></pre>
-
-<p>The NCBI sends you back some information you can use to refer to the posted IDs. 
-In <code>rentrez</code>, that information is represented as a <code>web_history</code> object. </p>
-
-<p>Note that if you have a very long list of IDs you may receive a 414 error when
-you try to upload them. If you have such a list (and they come from an external
-sources rather than a search that can be save to a <code>web_history</code> object), you
-may have to &#39;chunk&#39; the IDs into smaller sets that can processed. </p>
-
-<p>###Get a <code>web_history</code> object from <code>entrez_search</code> or <code>entrez_link()</code></p>
-
-<p>In addition to directly uploading IDs to the NCBI, you can use the web history
-features with <code>entrez_search</code> and <code>entrez_link</code>. For instance, imagine you wanted to
-find all of the sequences of the widely-studied gene COI from all snails
-(which are members of the taxonomic group Gastropoda):</p>
-
-<pre><code class="r">entrez_search(db=&quot;nuccore&quot;, term=&quot;COI[Gene] AND Gastropoda[ORGN]&quot;)
-</code></pre>
-
-<pre><code>## Entrez search result with 84692 hits (object contains 20 IDs and no web_history object)
-##  Search term (as translated):  COI[Gene] AND &quot;Gastropoda&quot;[Organism]
-</code></pre>
-
-<p>That&#39;s a lot of sequences! If you really wanted to download all of these it
-would be a good idea to save all those IDs to the server by setting
-<code>use_history</code> to <code>TRUE</code> (note you now get a <code>web_history</code> object along with your
-normal search result):</p>
-
-<pre><code class="r">snail_coi &lt;- entrez_search(db=&quot;nuccore&quot;, term=&quot;COI[Gene] AND Gastropoda[ORGN]&quot;, use_history=TRUE)
-snail_coi
-</code></pre>
-
-<pre><code>## Entrez search result with 84692 hits (object contains 20 IDs and a web_history object)
-##  Search term (as translated):  COI[Gene] AND &quot;Gastropoda&quot;[Organism]
-</code></pre>
-
-<pre><code class="r">snail_coi$web_history
-</code></pre>
-
-<pre><code>## Web history object (QueryKey = 1, WebEnv = NCID_1_26474...)
-</code></pre>
-
-<p>Similarity, <code>entrez_link()</code> can return <code>web_history</code> objects by using the <code>cmd</code>
-<code>neighbor_history</code>. Let&#39;s find genetic variants (from the clinvar database)
-associated with asthma (using the same OMIM ID we identified earlier):</p>
-
-<pre><code class="r">asthma_clinvar &lt;- entrez_link(dbfrom=&quot;omim&quot;, db=&quot;clinvar&quot;, cmd=&quot;neighbor_history&quot;, id=600807)
-asthma_clinvar$web_histories
-</code></pre>
-
+</div>
+</div>
+<div id="using-ncbis-web-history-features" class="section level2">
+<h2>Using NCBI's Web History features</h2>
+<p>When you are dealing with very large queries it can be time consuming to pass long vectors of unique IDs to and from the NCBI. To avoid this problem, the NCBI provides a feature called &quot;web history&quot; which allows users to store IDs on the NCBI servers then refer to them in future calls.</p>
+<div id="post-a-set-of-ids-to-the-ncbi-for-later-use-entrez_post" class="section level3">
+<h3>Post a set of IDs to the NCBI for later use: <code>entrez_post()</code></h3>
+<p>If you have a list of many NCBI IDs that you want to use later on, you can post them to the NCBI's severs. In order to provide a brief example, I'm going to post just one ID, the <code>omim</code> identifier for asthma:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">upload &lt;-<span class="st"> </span><span class="kw">entrez_post</span>(<span class="dt">db=</span><span class="st">&quot;omim&quot;</span>, <span class="dt">id=</span><span class="dv">600807</span>)
+upload</code></pre></div>
+<pre><code>## Web history object (QueryKey = 1, WebEnv = MCID_5faafb5...)</code></pre>
+<p>The NCBI sends you back some information you can use to refer to the posted IDs. In <code>rentrez</code>, that information is represented as a <code>web_history</code> object.</p>
+<p>Note that if you have a very long list of IDs you may receive a 414 error when you try to upload them. If you have such a list (and they come from an external sources rather than a search that can be save to a <code>web_history</code> object), you may have to 'chunk' the IDs into smaller sets that can processed.</p>
+</div>
+<div id="get-a-web_history-object-from-entrez_search-or-entrez_link" class="section level3">
+<h3>Get a <code>web_history</code> object from <code>entrez_search</code> or <code>entrez_link()</code></h3>
+<p>In addition to directly uploading IDs to the NCBI, you can use the web history features with <code>entrez_search</code> and <code>entrez_link</code>. For instance, imagine you wanted to find all of the sequences of the widely-studied gene COI from all snails (which are members of the taxonomic group Gastropoda):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;nuccore&quot;</span>, <span class="dt">term=</span><span class="st">&quot;COI[Gene] AND Gastropoda[ORGN]&quot;</span>)</code></pre></div>
+<pre><code>## Entrez search result with 95077 hits (object contains 20 IDs and no web_history object)
+##  Search term (as translated):  COI[Gene] AND &quot;Gastropoda&quot;[Organism]</code></pre>
+<p>That's a lot of sequences! If you really wanted to download all of these it would be a good idea to save all those IDs to the server by setting <code>use_history</code> to <code>TRUE</code> (note you now get a <code>web_history</code> object along with your normal search result):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snail_coi &lt;-<span class="st"> </span><span class="kw">entrez_search</span>(<span class="dt">db=</span><span class="st">&quot;nuccore&quot;</span>, <span class="dt">term=</span><span class="st">&quot;COI[Gene] AND Gastropoda[ORGN]&quot;</span>, <span class="dt">use_history=</span><span class="ot">TRUE</span>)
+snail_coi</code></pre></div>
+<pre><code>## Entrez search result with 95077 hits (object contains 20 IDs and a web_history object)
+##  Search term (as translated):  COI[Gene] AND &quot;Gastropoda&quot;[Organism]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snail_coi<span class="op">$</span>web_history</code></pre></div>
+<pre><code>## Web history object (QueryKey = 1, WebEnv = MCID_5faafb5...)</code></pre>
+<p>Similarity, <code>entrez_link()</code> can return <code>web_history</code> objects by using the <code>cmd</code> <code>neighbor_history</code>. Let's find genetic variants (from the clinvar database) associated with asthma (using the same OMIM ID we identified earlier):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">asthma_clinvar &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">&quot;omim&quot;</span>, <span class="dt">db=</span><span class="st">&quot;clinvar&quot;</span>, <span class="dt">cmd=</span><span class="st">&quot;neighbor_history&quot;</span>, <span class="dt">id=</span><span class="dv">600807</span>)
+asthma_clinvar<span class="op">$</span>web_histories</code></pre></div>
 <pre><code>## $omim_clinvar
-## Web history object (QueryKey = 1, WebEnv = NCID_1_26481...)
-</code></pre>
-
-<p>As you can see, instead of returning lists of IDs for each linked database (as
-it would be default), <code>entrez_link()</code> now  returns a list of web_histories.</p>
-
-<p>###Use a <code>web_history</code> object</p>
-
-<p>Once you have those IDs stored on the NCBI&#39;s servers, you are going to want to
-do something with them. The functions <code>entrez_fetch()</code> <code>entrez_summary()</code> and
-<code>entrez_link()</code> can all use <code>web_history</code> objects in exactly the same way they
-use IDs. </p>
-
-<p>So, we could repeat the last example (finding variants linked to asthma), but this
-time using the ID we uploaded earlier</p>
-
-<pre><code class="r">asthma_variants &lt;- entrez_link(dbfrom=&quot;omim&quot;, db=&quot;clinvar&quot;, cmd=&quot;neighbor_history&quot;, web_history=upload)
-asthma_variants
-</code></pre>
-
+## Web history object (QueryKey = 1, WebEnv = MCID_5faafb5...)</code></pre>
+<p>As you can see, instead of returning lists of IDs for each linked database (as it would be default), <code>entrez_link()</code> now returns a list of web_histories.</p>
+</div>
+<div id="use-a-web_history-object" class="section level3">
+<h3>Use a <code>web_history</code> object</h3>
+<p>Once you have those IDs stored on the NCBI's servers, you are going to want to do something with them. The functions <code>entrez_fetch()</code> <code>entrez_summary()</code> and <code>entrez_link()</code> can all use <code>web_history</code> objects in exactly the same way they use IDs.</p>
+<p>So, we could repeat the last example (finding variants linked to asthma), but this time using the ID we uploaded earlier</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">asthma_variants &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">&quot;omim&quot;</span>, <span class="dt">db=</span><span class="st">&quot;clinvar&quot;</span>, <span class="dt">cmd=</span><span class="st">&quot;neighbor_history&quot;</span>, <span class="dt">web_history=</span>upload)
+asthma_variants</code></pre></div>
 <pre><code>## elink object with contents:
-##  $web_histories: Objects containing web history information
-</code></pre>
-
-<p>&hellip; if we want to get some genetic information about these variants we need to
-map our clinvar IDs to SNP IDs:</p>
-
-<pre><code class="r">snp_links &lt;- entrez_link(dbfrom=&quot;clinvar&quot;, db=&quot;snp&quot;, 
-                         web_history=asthma_variants$web_histories$omim_clinvar,
-                         cmd=&quot;neighbor_history&quot;)
-snp_summ &lt;- entrez_summary(db=&quot;snp&quot;, web_history=snp_links$web_histories$clinvar_snp)
-knitr::kable(extract_from_esummary(snp_summ, c(&quot;chr&quot;, &quot;fxn_class&quot;, &quot;global_maf&quot;)))
-</code></pre>
-
-<table><thead>
-<tr>
+##  $web_histories: Objects containing web history information</code></pre>
+<p>... if we want to get some genetic information about these variants we need to map our clinvar IDs to SNP IDs:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snp_links &lt;-<span class="st"> </span><span class="kw">entrez_link</span>(<span class="dt">dbfrom=</span><span class="st">&quot;clinvar&quot;</span>, <span class="dt">db=</span><span class="st">&quot;snp&quot;</span>, 
+                         <span class="dt">web_history=</span>asthma_variants<span class="op">$</span>web_histories<span class="op">$</span>omim_clinvar,
+                         <span class="dt">cmd=</span><span class="st">&quot;neighbor_history&quot;</span>)
+snp_summ &lt;-<span class="st"> </span><span class="kw">entrez_summary</span>(<span class="dt">db=</span><span class="st">&quot;snp&quot;</span>, <span class="dt">web_history=</span>snp_links<span class="op">$</span>web_histories<span class="op">$</span>clinvar_snp)
+knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">extract_from_esummary</span>(snp_summ, <span class="kw">c</span>(<span class="st">&quot;chr&quot;</span>, <span class="st">&quot;fxn_class&quot;</span>, <span class="st">&quot;global_maf&quot;</span>)))</code></pre></div>
+<table>
+<colgroup>
+<col width="1%"></col>
+<col width="11%"></col>
+<col width="5%"></col>
+<col width="20%"></col>
+<col width="5%"></col>
+<col width="10%"></col>
+<col width="15%"></col>
+<col width="10%"></col>
+<col width="7%"></col>
+<col width="5%"></col>
+<col width="5%"></col>
+</colgroup>
+<thead>
+<tr class="header">
 <th align="left"></th>
+<th align="left">61816761</th>
 <th align="left">41364547</th>
 <th align="left">11558538</th>
+<th align="left">2303067</th>
+<th align="left">1805018</th>
+<th align="left">1805015</th>
+<th align="left">1051931</th>
+<th align="left">1042714</th>
+<th align="left">1042713</th>
 <th align="left">20541</th>
 </tr>
-</thead><tbody>
-<tr>
+</thead>
+<tbody>
+<tr class="odd">
 <td align="left">chr</td>
+<td align="left">1</td>
 <td align="left">11</td>
 <td align="left">2</td>
 <td align="left">5</td>
+<td align="left">6</td>
+<td align="left">16</td>
+<td align="left">6</td>
+<td align="left">5</td>
+<td align="left">5</td>
+<td align="left">5</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">fxn_class</td>
+<td align="left">upstream_transcript_variant,stop_gained,coding_sequence_variant,synonymous_variant</td>
 <td align="left">5_prime_UTR_variant,intron_variant</td>
-<td align="left">genic_downstream_transcript_variant,intron_variant,non_coding_transcript_variant,5_prime_UTR_variant,coding_sequence_variant,missense_variant</td>
+<td align="left">missense_variant,intron_variant,5_prime_UTR_variant,coding_sequence_variant,non_coding_transcript_variant,genic_downstream_transcript_variant</td>
+<td align="left">coding_sequence_variant,missense_variant</td>
+<td align="left">coding_sequence_variant,non_coding_transcript_variant,missense_variant</td>
+<td align="left">downstream_transcript_variant,missense_variant,genic_downstream_transcript_variant,coding_sequence_variant</td>
+<td align="left">coding_sequence_variant,non_coding_transcript_variant,missense_variant</td>
+<td align="left">coding_sequence_variant,stop_gained,missense_variant</td>
+<td align="left">coding_sequence_variant,missense_variant</td>
 <td align="left">coding_sequence_variant,missense_variant</td>
 </tr>
-<tr>
+<tr class="odd">
 <td align="left">NA</td>
 <td align="left">NULL</td>
 <td align="left">NULL</td>
 <td align="left">NULL</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
 </tr>
-</tbody></table>
-
-<p>If you really wanted to you could also use <code>web_history</code> objects to download all those thousands of COI sequences.
-When downloading large sets of data, it is a good idea to take advantage of the
-arguments <code>retmax</code> and <code>restart</code> to split the request up into smaller chunks.
-For instance, we could get the first 200 sequences in 50-sequence chunks:</p>
-
+</tbody>
+</table>
+<p>If you really wanted to you could also use <code>web_history</code> objects to download all those thousands of COI sequences. When downloading large sets of data, it is a good idea to take advantage of the arguments <code>retmax</code> and <code>restart</code> to split the request up into smaller chunks. For instance, we could get the first 200 sequences in 50-sequence chunks:</p>
 <p>(note: this code block is not executed as part of the vignette to save time and bandwidth):</p>
-
-<pre><code class="r">for( seq_start in seq(1,200,50)){
-    recs &lt;- entrez_fetch(db=&quot;nuccore&quot;, web_history=snail_coi$web_history,
-                         rettype=&quot;fasta&quot;, retmax=50, retstart=seq_start)
-    cat(recs, file=&quot;snail_coi.fasta&quot;, append=TRUE)
-    cat(seq_start+49, &quot;sequences downloaded\r&quot;)
-}
-</code></pre>
-
-<h2>Using API Keys</h2>
-
-<p>By default, the NCBI limits users to making only 3 requests per second (and
-<code>rentrez</code> enforces that limit). Users who register for an &ldquo;API key&rdquo; are able to
-make up to ten requests per second. Getting one of these keys is simple, you
-just need to <a href="https://www.ncbi.nlm.nih.gov/account/">register for &ldquo;my ncbi&rdquo;
-account</a> then click on a button in the
-<a href="https://www.ncbi.nlm.nih.gov/account/settings/">account settings page</a>.</p>
-
-<p>Once you have an API key, rentrez will allow you to take advantage of it. For 
-one-off cases, this is as simple as adding the <code>api_key</code> argument to given
-function call. (Note these examples are not executed as part of this document, 
-as the  API key used here not a real one).</p>
-
-<pre><code class="r">entrez_link(db=&quot;protein&quot;, dbfrom=&quot;gene&quot;, id=93100, api_key =&quot;ABCD123&quot;)
-</code></pre>
-
-<p>It most cases you will want to use your API for each of several calls to the
-NCBI. <code>rentrez</code> makes this easy by allowing you to set an environment variable
-,<code>ENTREZ_KEY</code>. Once this value is set to your key <code>rentrez</code> will use it for all
-requests to the NCBI. To set the value for a single R session you can use the
-function <code>set_entrez_key()</code>. Here we set the value and confirm it is available.</p>
-
-<pre><code class="r">set_entrez_key(&quot;ABCD123&quot;)
-Sys.getenv(&quot;ENTREZ_KEY&quot;)
-</code></pre>
-
-<pre><code>## [1] &quot;ABCD123&quot;
-</code></pre>
-
-<p>If you use <code>rentrez</code> often you should edit your <code>.Renviron</code> file (see <code>r
-help(Startup)</code> for description of this file)  to include your key. Doing so will
-mean all requests you send will take advantage of your API key.</p>
-
-<pre><code class="ini">ENTREZ_KEY=ABCD123
-</code></pre>
-
-<p>As long as an API key is set by one of these methods, <code>rentrez</code> will allow you
-to make up to ten requests per second.</p>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">for</span>( seq_start <span class="cf">in</span> <span class="kw">seq</span>(<span class="dv">1</span>,<span class="dv">200</span>,<span class="dv">50</span>)){
+    recs &lt;-<span class="st"> </span><span class="kw">entrez_fetch</span>(<span class="dt">db=</span><span class="st">&quot;nuccore&quot;</span>, <span class="dt">web_history=</span>snail_coi<span class="op">$</span>web_history,
+                         <span class="dt">rettype=</span><span class="st">&quot;fasta&quot;</span>, <span class="dt">retmax=</span><span class="dv">50</span>, <span class="dt">retstart=</span>seq_start)
+    <span class="kw">cat</span>(recs, <span class="dt">file=</span><span class="st">&quot;snail_coi.fasta&quot;</span>, <span class="dt">append=</span><span class="ot">TRUE</span>)
+    <span class="kw">cat</span>(seq_start<span class="op">+</span><span class="dv">49</span>, <span class="st">&quot;sequences downloaded</span><span class="ch">\r</span><span class="st">&quot;</span>)
+}</code></pre></div>
+</div>
+</div>
+<div id="rate-limiting-and-api-keys" class="section level2">
+<h2>Rate-limiting and API Keys</h2>
+<p>By default, the NCBI limits users to making only 3 requests per second (and <code>rentrez</code> enforces that limit). Users who register for an &quot;API key&quot; are able to make up to ten requests per second. Getting one of these keys is simple, you just need to <a href="https://www.ncbi.nlm.nih.gov/account/">register for &quot;my ncbi&quot; account</a> then click on a button in the <a href="https://www.ncbi.nlm.nih.gov/account/settings/">account settings page</a>.</p>
+<p>Once you have an API key, rentrez will allow you to take advantage of it. For one-off cases, this is as simple as adding the <code>api_key</code> argument to given function call. (Note these examples are not executed as part of this document, as the API key used here not a real one).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">entrez_link</span>(<span class="dt">db=</span><span class="st">&quot;protein&quot;</span>, <span class="dt">dbfrom=</span><span class="st">&quot;gene&quot;</span>, <span class="dt">id=</span><span class="dv">93100</span>, <span class="dt">api_key =</span><span class="st">&quot;ABCD123&quot;</span>)</code></pre></div>
+<p>It most cases you will want to use your API for each of several calls to the NCBI. <code>rentrez</code> makes this easy by allowing you to set an environment variable ,<code>ENTREZ_KEY</code>. Once this value is set to your key <code>rentrez</code> will use it for all requests to the NCBI. To set the value for a single R session you can use the function <code>set_entrez_key()</code>. Here we set the value and confirm it is available.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set_entrez_key</span>(<span class="st">&quot;ABCD123&quot;</span>)
+<span class="kw">Sys.getenv</span>(<span class="st">&quot;ENTREZ_KEY&quot;</span>)</code></pre></div>
+<pre><code>## [1] &quot;ABCD123&quot;</code></pre>
+<p>If you use <code>rentrez</code> often you should edit your <code>.Renviron</code> file (see <code>r help(Startup)</code> for description of this file) to include your key. Doing so will mean all requests you send will take advantage of your API key.</p>
+<div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">ENTREZ_KEY</span><span class="ot">=</span><span class="st">ABCD123</span></code></pre></div>
+<p>As long as an API key is set by one of these methods, <code>rentrez</code> will allow you to make up to ten requests per second.</p>
+<div id="slowing-rentrez-down-when-you-hit-the-rate-limit" class="section level3">
+<h3>Slowing rentrez down when you hit the rate-limit</h3>
+<p><code>rentrez</code> won't let you <em>send</em> requests to the NCBI at a rate higher than the rate-limit, but it is sometimes possible that they will <em>arrive</em> too close together an produce errors. If you are using <code>rentrez</code> functions in a for loop and find rate-limiting errors are occuring, you may consider adding a call to <code>Sys.sleep(0.1)</code> before each message sent to the NCBI. This will ensure you stay beloe the rate limit.</p>
+</div>
+</div>
+<div id="what-next" class="section level2">
 <h2>What next ?</h2>
+<p>This tutorial has introduced you to the core functions of <code>rentrez</code>, there are almost limitless ways that you could put them together. <a href="https://github.com/ropensci/rentrez/wiki">Check out the wiki</a> for more specific examples, and be sure to read the inline-documentation for each function. If you run into problem with rentrez, or just need help with the package and <code>Eutils</code> please contact us by opening an issue at the <a href="https://github.com/ropensci/rentrez/issues">github repository</a></p>
+</div>
 
-<p>This tutorial has introduced you to the core functions of <code>rentrez</code>, there are
-almost limitless ways that you could put them together. <a href="https://github.com/ropensci/rentrez/wiki">Check out the wiki</a>
-for more specific examples, and be sure to read the inline-documentation for
-each function. If you run into problem with rentrez, or just need help with the
-package and <code>Eutils</code> please contact us by opening an issue at the <a href="https://github.com/ropensci/rentrez/issues">github
-repository</a></p>
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 </body>
-
 </html>

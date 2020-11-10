@@ -39,7 +39,7 @@
 #'@param version either 1.0 or 2.0 see above for description
 #'@param retmode either "xml" or "json". By default, xml will be used for
 #'version 1.0 records, json for version 2.0.
-#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESummary_} 
+#'@references \url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESummary_} 
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso \code{\link{extract_from_esummary}} which can be used to extract
 #'elements from a list of esummary records
@@ -50,7 +50,7 @@
 #'@importFrom XML xpathApply xmlSApply xmlGetAttr xmlValue
 #'@importFrom jsonlite fromJSON
 #' @examples
-#'\donttest{
+#'\dontrun{
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
 #'  pop_summ <- entrez_summary(db="popset", id=pop_ids)
 #'  extract_from_esummary(pop_summ, "title")
